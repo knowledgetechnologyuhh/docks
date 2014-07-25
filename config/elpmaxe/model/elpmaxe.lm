@@ -1,0 +1,753 @@
+Language model created by QuickLM on Tue Jul  1 16:19:42 CEST 2014
+Copyright (c) 1996-2002
+Carnegie Mellon University and Alexander I. Rudnicky
+
+This model based on a corpus of 90 sentences and 92 words
+The (fixed) discount mass is 0.5
+
+\data\
+ngram 1=92
+ngram 2=282
+ngram 3=360
+
+\1-grams:
+-1.1856 </s> -0.3010
+-1.1856 <s> -0.2041
+-2.4409 a -0.2953
+-3.1399 am -0.3007
+-3.1399 an -0.2995
+-2.4409 apple -0.2525
+-3.1399 approaching -0.2985
+-2.5378 are -0.2995
+-3.1399 around -0.2717
+-2.1856 at -0.2950
+-2.3617 back -0.2660
+-2.6628 banana -0.2549
+-3.1399 behind -0.2953
+-2.3617 can -0.2947
+-3.1399 chosen -0.2883
+-2.2948 clean -0.2837
+-2.8388 correct -0.2714
+-3.1399 dice -0.2969
+-2.4409 doing -0.2556
+-3.1399 done -0.2883
+-2.5378 door -0.2707
+-2.2948 down -0.2673
+-2.8388 find -0.2834
+-3.1399 following -0.2985
+-2.2948 front -0.2697
+-2.2948 go -0.2899
+-2.8388 good -0.3004
+-3.1399 halt -0.2717
+-2.8388 have -0.3004
+-2.8388 help -0.2985
+-2.8388 hey -0.2931
+-2.3617 home -0.2697
+-2.1399 i -0.2950
+-2.1856 in -0.2834
+-1.5378 is -0.2598
+-2.2948 it -0.2896
+-3.1399 it's -0.2995
+-3.1399 keep -0.2979
+-3.1399 kitchen -0.2883
+-3.1399 laptop -0.2883
+-3.1399 lay -0.2988
+-1.7782 left -0.2660
+-2.4409 look -0.2811
+-2.2368 me -0.2450
+-3.1399 move -0.2972
+-2.1856 my -0.2857
+-3.1399 no -0.2979
+-3.1399 not -0.3004
+-2.6628 now -0.2717
+-2.1399 object -0.2429
+-2.3617 of -0.2928
+-3.1399 ok -0.2988
+-2.0259 on -0.2788
+-3.1399 one -0.2717
+-3.1399 out -0.2717
+-2.5378 pen -0.2503
+-3.1399 phone -0.2717
+-2.1856 pick -0.2784
+-1.9094 please -0.2886
+-2.5378 put -0.2843
+-2.0607 right -0.2687
+-1.7419 robot -0.2286
+-3.1399 screen -0.2883
+-2.5378 show -0.2843
+-2.6628 side -0.2717
+-2.6628 smartphone -0.2581
+-3.1399 someone -0.2883
+-2.8388 somethin -0.2853
+-2.0985 something -0.2741
+-3.1399 standing -0.2982
+-2.2368 stop -0.2514
+-2.1856 table -0.2588
+-3.1399 take -0.2988
+-3.1399 that -0.2979
+-1.4964 the -0.2711
+-1.9358 there -0.2581
+-2.4409 think -0.2966
+-2.1399 this -0.2797
+-2.0607 to -0.2714
+-2.8388 towards -0.2982
+-3.1399 turn -0.2937
+-2.1856 up -0.2567
+-3.1399 waht -0.2953
+-3.1399 wall -0.3007
+-2.8388 want -0.2953
+-2.8388 what -0.2953
+-2.8388 which -0.2824
+-2.4409 wrong -0.2632
+-3.1399 yes -0.2979
+-1.8846 you -0.2577
+-2.5378 your -0.2879
+-3.1399 yourself -0.2717
+
+\2-grams:
+-2.2553 <s> apple -0.2041
+-2.2553 <s> at -0.1597
+-2.2553 <s> can -0.1249
+-1.9542 <s> clean -0.0580
+-2.2553 <s> door -0.2430
+-2.2553 <s> down -0.1091
+-1.9542 <s> go 0.0000
+-1.9542 <s> help 0.0000
+-1.9542 <s> hey 0.0000
+-1.5563 <s> i -0.0792
+-2.2553 <s> it's 0.0000
+-2.2553 <s> left -0.1007
+-1.7782 <s> look -0.1461
+-2.2553 <s> no 0.0000
+-1.9542 <s> object -0.2041
+-2.2553 <s> ok 0.0000
+-1.9542 <s> pick -0.1919
+-1.3522 <s> please -0.0706
+-1.9542 <s> put -0.0969
+-2.2553 <s> right -0.0969
+-0.9765 <s> robot -0.0492
+-1.7782 <s> show 0.0000
+-1.9542 <s> smartphone -0.1249
+-1.9542 <s> stop -0.2430
+-1.4102 <s> the -0.2258
+-1.2139 <s> there -0.0746
+-1.7782 <s> this -0.1461
+-2.2553 <s> wrong -0.0792
+-2.2553 <s> yes 0.0000
+-2.2553 <s> you -0.2888
+-1.0000 a dice 0.0000
+-1.0000 a door -0.2430
+-1.0000 a pen -0.2430
+-0.6990 a table -0.2499
+-0.3010 am standing 0.0000
+-0.3010 an apple -0.2553
+-1.0000 apple </s> -0.3010
+-1.0000 apple down -0.1091
+-1.0000 apple in -0.1597
+-0.6990 apple is -0.2730
+-0.3010 approaching me -0.2430
+-0.3010 are doing 0.0000
+-0.3010 around </s> -0.3010
+-0.5563 at home 0.0000
+-0.7782 at my -0.0872
+-1.2553 at your -0.1761
+-0.3802 back </s> -0.3010
+-1.0792 back please -0.2319
+-0.7782 banana </s> -0.3010
+-0.7782 banana is -0.2788
+-0.7782 banana up -0.1249
+-0.3010 behind you -0.2361
+-0.7782 can find 0.0000
+-0.4771 can you -0.2499
+-0.3010 chosen is -0.2956
+-0.3680 clean the -0.2704
+-1.1461 clean this -0.2788
+-0.6021 correct </s> -0.3010
+-0.6021 correct one 0.0000
+-0.3010 dice on -0.0902
+-0.6990 doing </s> -0.3010
+-1.0000 doing is -0.2844
+-0.6990 doing it -0.2341
+-0.3010 done is -0.2956
+-0.9031 door in -0.2218
+-0.6021 door is -0.2788
+-0.9031 door the -0.2756
+-0.4472 down </s> -0.3010
+-1.1461 down now 0.0000
+-1.1461 down this -0.2553
+-0.6021 find something -0.2808
+-0.6021 find the -0.2961
+-0.3010 following me -0.2730
+-1.1461 front </s> -0.3010
+-0.3680 front of 0.0000
+-0.6690 go left -0.0854
+-0.5441 go to -0.1513
+-0.6021 good keep 0.0000
+-0.6021 good waht 0.0000
+-0.3010 halt </s> -0.3010
+-0.6021 have chosen 0.0000
+-0.6021 have done 0.0000
+-0.3010 help me -0.2430
+-0.3010 hey robot -0.2355
+-0.3802 home </s> -0.3010
+-1.0792 home can -0.1249
+-1.3010 i am 0.0000
+-1.3010 i can -0.2218
+-1.3010 i doing -0.2041
+-0.6021 i think 0.0000
+-1.0000 i want 0.0000
+-0.5563 in front -0.0580
+-0.7782 in the -0.2808
+-1.2553 in your -0.1761
+-1.2041 is a 0.0000
+-1.9031 is an 0.0000
+-1.9031 is approaching 0.0000
+-1.2041 is at -0.0458
+-1.9031 is following 0.0000
+-1.9031 is front -0.0580
+-1.9031 is good -0.1761
+-1.3010 is in -0.1249
+-1.9031 is not 0.0000
+-1.2041 is on -0.0621
+-1.4260 is right -0.0969
+-1.9031 is somethin -0.1761
+-1.1249 is something -0.1627
+-1.9031 is the -0.2961
+-1.6021 is towards 0.0000
+-1.6021 is wrong 0.0000
+-0.8451 it down -0.1091
+-1.1461 it good -0.1761
+-1.1461 it out 0.0000
+-1.1461 it right -0.2632
+-1.1461 it up -0.1249
+-1.1461 it wrong -0.0792
+-0.3010 it's wrong -0.0792
+-0.3010 keep i -0.2788
+-0.3010 kitchen is -0.2730
+-0.3010 laptop is -0.2730
+-0.3010 lay down -0.2688
+-0.4323 left </s> -0.3010
+-1.6628 left around 0.0000
+-1.6628 left right -0.2632
+-1.1856 left side 0.0000
+-1.6628 left turn 0.0000
+-1.0000 look at -0.2218
+-0.6990 look robot -0.2833
+-1.0000 look there -0.2583
+-1.0000 look to -0.1996
+-0.9031 me </s> -0.3010
+-1.2041 me can -0.1249
+-1.2041 me clean -0.0580
+-1.2041 me pick -0.1919
+-1.2041 me something -0.2139
+-0.9031 me the -0.2650
+-0.3010 move to -0.1996
+-1.2553 my back -0.0669
+-1.2553 my home -0.0669
+-1.2553 my laptop 0.0000
+-0.5563 my left -0.1007
+-1.2553 my right -0.2825
+-0.3010 no this -0.1761
+-0.3010 not correct -0.1761
+-0.3010 now </s> -0.3010
+-1.3010 object </s> -0.3010
+-1.0000 object down -0.0580
+-1.3010 object is -0.2788
+-1.3010 object on -0.2840
+-1.0000 object to -0.1513
+-1.3010 object up -0.1249
+-1.0000 object which 0.0000
+-0.7782 of me -0.2109
+-0.4771 of you -0.2361
+-0.3010 ok go -0.1549
+-1.4150 on my -0.1597
+-0.4150 on the -0.2078
+-1.4150 on to -0.2632
+-1.4150 on your -0.2430
+-0.3010 one </s> -0.3010
+-0.3010 out </s> -0.3010
+-0.9031 pen </s> -0.3010
+-0.9031 pen is -0.2730
+-0.9031 pen on -0.0902
+-0.9031 pen up -0.1249
+-0.3010 phone </s> -0.3010
+-1.2553 pick it -0.2688
+-0.9542 pick the -0.2808
+-0.9542 pick this -0.2304
+-0.6532 pick up 0.0000
+-1.0544 please clean 0.0000
+-1.2304 please go 0.0000
+-1.5315 please lay 0.0000
+-1.2304 please look -0.2041
+-1.5315 please move 0.0000
+-0.8325 please pick 0.0000
+-1.2304 please stop -0.2109
+-1.5315 please take 0.0000
+-0.6021 put it -0.2341
+-0.9031 put that 0.0000
+-0.9031 put the -0.2860
+-0.4260 right </s> -0.3010
+-1.3802 right can -0.1249
+-1.0792 right now 0.0000
+-1.6990 robot </s> -0.3010
+-1.6990 robot clean -0.0580
+-1.6990 robot go -0.1549
+-1.6990 robot halt 0.0000
+-1.0969 robot i -0.1461
+-1.6990 robot my -0.2762
+-1.6990 robot pick -0.2499
+-1.0969 robot please -0.1845
+-1.6990 robot put -0.1761
+-1.6990 robot show -0.1761
+-1.6990 robot somethin -0.1761
+-1.2218 robot stop -0.1761
+-1.3979 robot there -0.0746
+-1.6990 robot this -0.1761
+-1.3979 robot you -0.2499
+-0.3010 screen is -0.2730
+-0.6021 show me -0.2430
+-0.6021 show the -0.2756
+-0.3010 side </s> -0.3010
+-0.7782 smartphone </s> -0.3010
+-0.4771 smartphone is -0.2430
+-0.3010 someone is -0.2956
+-0.6021 somethin at -0.1597
+-0.6021 somethin is -0.2956
+-1.3424 something at -0.2762
+-1.0414 something in -0.2218
+-0.7404 something is -0.2553
+-0.8653 something on -0.0621
+-1.3424 something to -0.2825
+-0.3010 standing in -0.1597
+-0.9031 stop </s> -0.3010
+-1.2041 stop it -0.2688
+-1.2041 stop robot -0.2833
+-1.2041 stop stop -0.2730
+-1.2041 stop there -0.2583
+-1.2041 stop what 0.0000
+-1.2041 stop yourself 0.0000
+-0.5563 table </s> -0.3010
+-0.9542 table on -0.0902
+-1.2553 table there -0.2583
+-1.2553 table up -0.1249
+-0.3010 take it -0.2688
+-0.3010 that object -0.2553
+-1.4674 the apple -0.0792
+-1.4674 the back 0.0000
+-1.6435 the banana -0.1249
+-1.9445 the correct -0.1761
+-1.6435 the door -0.1761
+-1.9445 the front -0.2688
+-1.9445 the kitchen 0.0000
+-0.9445 the left -0.0362
+-1.2455 the object -0.1461
+-1.6435 the pen -0.1761
+-1.9445 the phone 0.0000
+-1.3424 the right -0.0969
+-1.9445 the screen 0.0000
+-1.9445 the smartphone -0.2218
+-1.1663 the table -0.0872
+-1.9445 the wall 0.0000
+-1.0280 there </s> -0.3010
+-0.3912 there is -0.2240
+-1.0000 think someone 0.0000
+-0.5229 think something -0.2139
+-1.0000 think what 0.0000
+-1.3010 this banana -0.2218
+-0.6021 this is -0.2672
+-1.0000 this object -0.2553
+-1.3010 this pen -0.2430
+-1.3010 this table -0.1597
+-1.3802 to go -0.1963
+-1.0792 to left -0.1007
+-1.0792 to my -0.1597
+-1.3802 to put -0.2430
+-0.6812 to the -0.2258
+-1.3802 to your -0.2430
+-0.3010 towards my -0.1249
+-0.3010 turn left -0.2915
+-0.4771 up </s> -0.3010
+-0.7782 up the -0.2756
+-0.3010 waht you -0.2499
+-0.3010 wall behind 0.0000
+-0.3010 want you -0.2762
+-0.3010 what you -0.2218
+-0.6021 which is -0.2730
+-0.6021 which you -0.2762
+-0.3979 wrong </s> -0.3010
+-1.0000 wrong robot -0.2923
+-0.3010 yes this -0.1761
+-0.8573 you </s> -0.3010
+-0.9542 you are 0.0000
+-1.5563 you can -0.2218
+-1.2553 you have 0.0000
+-0.9542 you please -0.2319
+-1.2553 you to -0.2632
+-0.6021 your back -0.0669
+-0.9031 your left -0.2717
+-0.9031 your right -0.0969
+-0.3010 yourself </s> -0.3010
+
+\3-grams:
+-0.3010 <s> apple is
+-0.3010 <s> at home
+-0.3010 <s> can you
+-0.3010 <s> clean the
+-0.3010 <s> door the
+-0.3010 <s> down </s>
+-0.6021 <s> go left
+-0.6021 <s> go to
+-0.3010 <s> help me
+-0.3010 <s> hey robot
+-1.0000 <s> i can
+-0.6990 <s> i think
+-0.6990 <s> i want
+-0.3010 <s> it's wrong
+-0.3010 <s> left </s>
+-0.4771 <s> look robot
+-0.7782 <s> look to
+-0.3010 <s> no this
+-0.6021 <s> object down
+-0.6021 <s> object to
+-0.3010 <s> ok go
+-0.3010 <s> pick up
+-0.9031 <s> please clean
+-0.9031 <s> please go
+-1.2041 <s> please lay
+-1.2041 <s> please move
+-1.2041 <s> please pick
+-1.2041 <s> please stop
+-0.6021 <s> put it
+-0.6021 <s> put the
+-0.3010 <s> right </s>
+-1.5798 <s> robot clean
+-1.5798 <s> robot go
+-1.5798 <s> robot halt
+-1.1027 <s> robot i
+-1.5798 <s> robot my
+-1.5798 <s> robot pick
+-0.9777 <s> robot please
+-1.5798 <s> robot put
+-1.5798 <s> robot show
+-1.5798 <s> robot somethin
+-1.2788 <s> robot stop
+-1.5798 <s> robot this
+-1.5798 <s> robot you
+-0.7782 <s> show me
+-0.4771 <s> show the
+-0.3010 <s> smartphone is
+-0.6021 <s> stop robot
+-0.6021 <s> stop yourself
+-1.1461 <s> the apple
+-1.1461 <s> the banana
+-0.8451 <s> the door
+-1.1461 <s> the kitchen
+-1.1461 <s> the object
+-1.1461 <s> the screen
+-0.3010 <s> there is
+-0.4771 <s> this is
+-0.7782 <s> this pen
+-0.3010 <s> wrong </s>
+-0.3010 <s> yes this
+-0.3010 <s> you can
+-0.3010 a dice on
+-0.3010 a door in
+-0.3010 a pen on
+-0.3010 a table on
+-0.3010 am standing in
+-0.3010 an apple in
+-0.3010 apple down </s>
+-0.3010 apple in front
+-0.3010 apple is on
+-0.3010 approaching me </s>
+-0.9031 are doing </s>
+-0.9031 are doing is
+-0.6021 are doing it
+-0.3979 at home </s>
+-1.0000 at home can
+-0.7782 at my back
+-0.7782 at my home
+-0.7782 at my left
+-0.3010 at your back
+-0.3010 back please pick
+-0.3010 banana is in
+-0.3010 banana up </s>
+-0.3010 behind you </s>
+-0.6021 can find something
+-0.6021 can find the
+-0.3010 can you please
+-0.3010 chosen is the
+-0.3010 clean the table
+-0.3010 clean this table
+-0.3010 correct one </s>
+-0.3010 dice on the
+-0.3010 doing is right
+-0.6021 doing it good
+-0.6021 doing it wrong
+-0.3010 done is not
+-0.3010 door in the
+-0.3010 door is in
+-0.3010 door the object
+-0.3010 down now </s>
+-0.3010 down this object
+-0.3010 find something to
+-0.3010 find the wall
+-0.3010 following me can
+-0.7782 front of me
+-0.4771 front of you
+-0.4771 go left </s>
+-0.7782 go left right
+-0.6021 go to left
+-0.6021 go to the
+-0.3010 good keep i
+-0.3010 good waht you
+-0.3010 have chosen is
+-0.3010 have done is
+-0.6021 help me clean
+-0.6021 help me pick
+-0.6021 hey robot i
+-0.6021 hey robot stop
+-0.3010 home can you
+-0.3010 i am standing
+-0.3010 i can find
+-0.3010 i doing </s>
+-1.0000 i think someone
+-0.5229 i think something
+-1.0000 i think what
+-0.3010 i want you
+-0.3010 in front of
+-0.4771 in the back
+-0.7782 in the front
+-0.3010 in your back
+-1.0000 is a dice
+-1.0000 is a door
+-1.0000 is a pen
+-0.6990 is a table
+-0.3010 is an apple
+-0.3010 is approaching me
+-0.5229 is at home
+-0.6990 is at my
+-0.3010 is following me
+-0.3010 is front of
+-0.3010 is good waht
+-0.4260 is in front
+-0.9031 is in your
+-0.3010 is not correct
+-0.3979 is on the
+-1.0000 is on your
+-0.3010 is right </s>
+-0.3010 is somethin at
+-1.0792 is something at
+-0.7782 is something in
+-0.6021 is something on
+-0.3010 is the correct
+-0.3010 is towards my
+-0.6021 is wrong </s>
+-0.6021 is wrong robot
+-0.3010 it down </s>
+-0.3010 it good keep
+-0.3010 it out </s>
+-0.3010 it right now
+-0.3010 it up </s>
+-0.3010 it wrong </s>
+-0.3010 it's wrong </s>
+-0.3010 keep i doing
+-0.3010 kitchen is at
+-0.3010 laptop is at
+-0.3010 lay down this
+-0.3010 left around </s>
+-0.3010 left right now
+-0.3010 left side </s>
+-0.3010 left turn left
+-0.3010 look at my
+-0.3010 look robot there
+-0.3010 look there </s>
+-0.3010 look to the
+-0.3010 me can you
+-0.3010 me clean the
+-0.3010 me pick up
+-0.3010 me something is
+-0.6021 me the object
+-0.6021 me the pen
+-0.3010 move to the
+-0.3010 my back </s>
+-0.3010 my home </s>
+-0.3010 my laptop is
+-0.3010 my left </s>
+-0.3010 my right can
+-0.3010 no this is
+-0.3010 not correct </s>
+-0.6021 object down </s>
+-0.6021 object down now
+-0.3010 object is in
+-0.3010 object on my
+-0.6021 object to my
+-0.6021 object to the
+-0.3010 object up </s>
+-0.6021 object which is
+-0.6021 object which you
+-0.6021 of me </s>
+-0.6021 of me something
+-0.3010 of you </s>
+-0.3010 ok go to
+-0.3010 on my left
+-1.3010 on the back
+-0.5229 on the left
+-0.8239 on the right
+-0.3010 on to my
+-0.3010 on your left
+-0.3010 pen is at
+-0.3010 pen on the
+-0.3010 pen up </s>
+-0.3010 pick it up
+-0.6021 pick the banana
+-0.6021 pick the pen
+-0.6021 pick this banana
+-0.6021 pick this object
+-0.9031 pick up </s>
+-0.4260 pick up the
+-0.4771 please clean the
+-0.7782 please clean this
+-0.6021 please go left
+-0.6021 please go to
+-0.3010 please lay down
+-0.6021 please look at
+-0.6021 please look there
+-0.3010 please move to
+-1.0000 please pick it
+-0.6990 please pick the
+-1.0000 please pick this
+-1.0000 please pick up
+-0.6021 please stop </s>
+-0.6021 please stop there
+-0.3010 please take it
+-0.3010 put it down
+-0.3010 put that object
+-0.3010 put the apple
+-0.3010 right can you
+-0.3010 right now </s>
+-0.3010 robot clean the
+-0.3010 robot go to
+-0.3010 robot halt </s>
+-0.9031 robot i am
+-0.4260 robot i think
+-0.3010 robot my laptop
+-0.3010 robot pick this
+-0.9031 robot please clean
+-0.4260 robot please pick
+-0.3010 robot put it
+-0.3010 robot show me
+-0.3010 robot somethin is
+-0.7782 robot stop </s>
+-0.7782 robot stop it
+-0.7782 robot stop stop
+-0.3010 robot there is
+-0.3010 robot this is
+-0.3010 robot you are
+-0.3010 screen is on
+-0.3010 show me the
+-0.3010 show the object
+-0.6021 smartphone is at
+-0.6021 smartphone is on
+-0.3010 someone is following
+-0.3010 somethin at home
+-0.3010 somethin is front
+-0.3010 something at your
+-0.3010 something in the
+-0.9031 something is approaching
+-0.9031 something is at
+-0.6021 something is towards
+-0.4771 something on the
+-0.7782 something on to
+-0.3010 something to your
+-0.3010 standing in front
+-0.3010 stop it right
+-0.3010 stop robot you
+-0.3010 stop stop what
+-0.3010 stop there </s>
+-0.3010 stop what you
+-0.3010 stop yourself </s>
+-0.3010 table on the
+-0.3010 table there </s>
+-0.3010 table up </s>
+-0.3010 take it out
+-0.3010 that object down
+-0.7782 the apple </s>
+-0.7782 the apple down
+-0.7782 the apple is
+-0.4771 the back </s>
+-0.7782 the back please
+-0.6021 the banana is
+-0.6021 the banana up
+-0.3010 the correct one
+-0.3010 the door is
+-0.3010 the front </s>
+-0.3010 the kitchen is
+-0.4559 the left </s>
+-1.0000 the left side
+-1.3010 the left turn
+-1.0000 the object is
+-1.0000 the object on
+-1.0000 the object to
+-0.6990 the object which
+-0.6021 the pen </s>
+-0.6021 the pen up
+-0.3010 the phone </s>
+-0.3010 the right </s>
+-0.3010 the screen is
+-0.3010 the smartphone </s>
+-0.4771 the table </s>
+-1.0792 the table there
+-1.0792 the table up
+-0.3010 the wall behind
+-0.7160 there is a
+-1.4150 there is an
+-1.4150 there is somethin
+-0.6368 there is something
+-0.3010 think someone is
+-0.3010 think something is
+-0.3010 think what you
+-0.3010 this banana </s>
+-1.0000 this is good
+-0.6990 this is right
+-0.6990 this is wrong
+-0.6021 this object </s>
+-0.6021 this object up
+-0.3010 this pen is
+-0.3010 this table </s>
+-0.3010 to go left
+-0.3010 to left </s>
+-0.3010 to my left
+-0.3010 to put that
+-0.3979 to the left
+-1.0000 to the right
+-0.3010 to your right
+-0.6021 towards my left
+-0.6021 towards my right
+-0.3010 turn left around
+-0.7782 up the apple
+-0.7782 up the phone
+-0.7782 up the smartphone
+-0.3010 waht you are
+-0.3010 wall behind you
+-0.3010 want you to
+-0.6021 what you are
+-0.6021 what you have
+-0.3010 which is on
+-0.3010 which you have
+-0.3010 wrong robot </s>
+-0.3010 yes this is
+-0.3010 you are doing
+-0.3010 you can find
+-0.6021 you have chosen
+-0.6021 you have done
+-0.6021 you please look
+-0.9031 you please stop
+-0.9031 you please take
+-0.6021 you to go
+-0.6021 you to put
+-0.3010 your back </s>
+-0.3010 your left side
+-0.3010 your right </s>
+
+\end\

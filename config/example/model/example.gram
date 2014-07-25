@@ -1,0 +1,98 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for WTM
+ */
+
+grammar scenario;
+
+public <utterance> = (there is something at your back) |
+(you can find the wall behind you) |
+(there is a door in the back) |
+(there is something in the back) |
+(i think someone is following me can you please look at my back) |
+(the door is in your back) |
+(apple is on the back please pick it up) |
+(please clean this table) |
+(please clean the table) |
+(clean the table there) |
+(clean the table) |
+(robot clean the table up) |
+(robot please clean the table) |
+(help me clean the table) |
+(robot i am standing in front of you) |
+(the door is in front of you) |
+(door the object is in front of me) |
+(there is an apple in front of you) |
+(there is something in the front) |
+(robot somethin is front of me something is approaching me) |
+(the banana is in front of you) |
+(please go to left) |
+(ok go to the left) |
+(please move to the left) |
+(go left) |
+(left) |
+(robot go to the left side) |
+(go to left) |
+(i want you to go left right now) |
+(please go left) |
+(robot my laptop is at my home) |
+(the kitchen is at home) |
+(at home) |
+(look robot there is somethin at home) |
+(robot i think something is at home can you please take it out) |
+(smartphone is at home) |
+(the screen is on the left) |
+(there is something on to my left) |
+(there is a pen on the left side) |
+(there is something on the left) |
+(robot i think something is towards my left) |
+(there is a table on the left) |
+(the apple is on the left turn left around) |
+(this is wrong) |
+(i think what you have done is not correct) |
+(it's wrong) |
+(stop robot you are doing it wrong) |
+(wrong) |
+(no this is wrong robot) |
+(please pick this banana) |
+(robot please pick the banana up) |
+(pick up) |
+(robot please pick the pen up) |
+(robot pick this object up) |
+(robot please pick up the phone) |
+(help me pick up the apple) |
+(pick up the smartphone) |
+(put it down) |
+(down) |
+(object down) |
+(robot put it down) |
+(i want you to put that object down now) |
+(put the apple down) |
+(please lay down this object) |
+(i can find something to your right) |
+(look to the right) |
+(look robot there is something on the right) |
+(hey robot i think something is towards my right can you please look there) |
+(there is a table on the right) |
+(smartphone is on the right) |
+(this pen is at my left) |
+(show the object which is on your left side) |
+(show the object to the left) |
+(object to my left) |
+(robot show me the pen) |
+(show me the object on my left) |
+(there is a dice on the left) |
+(please stop) |
+(robot stop) |
+(can you please stop there) |
+(stop yourself) |
+(robot stop stop what you are doing) |
+(hey robot stop it right now) |
+(robot halt) |
+(yes this is right) |
+(the object which you have chosen is the correct one) |
+(right) |
+(this is right) |
+(robot you are doing it good keep i doing) |
+(robot this is good waht you are doing is right);
