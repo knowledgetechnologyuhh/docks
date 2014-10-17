@@ -698,8 +698,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public String getSignature() {
-            return "GS " + node + "-lc-" + hmmPool.getUnit(lc) + "-rc-" +
-                    hmmPool.getUnit(nextBaseID);
+            return "GS " + node + "-lc-";
         }
 
 
@@ -723,31 +722,10 @@ public class DynamicFlatLinguist Javadoc)
 
          */
         GrammarArc[] filter(GrammarArc[] arcs, int nextBase) {
-            if (nextBase != ANY) {
-                List<GrammarArc> list = new ArrayList<GrammarArc>();
-                for (GrammarArc arc : arcs) {
-                    GrammarNode node = arc.getGrammarNode();
-                    if (hasEntryContext(node, nextBase)) {
-                        list.add(arc);
-                    }
-                }
-                arcs = list.toArray(new GrammarArc[list.size()]);
-            }
+        	assert nextBase == ANY;
             return arcs;
         }
 
-
-        /**
-         * Determines if the given node starts with the specified unit
-         *
-         * @param node   the grammar node
-         * @param unitID the id of the unit
-
-         */
-        private boolean hasEntryContext(GrammarNode node, int unitID) {
-            Set<Unit> unitSet = nodeToUnitSetMap.get(node);
-            return unitSet.contains(hmmPool.getUnit(unitID));
-        }
 
         /**
          * Retain only the pronunciations that start with the unit indicated by
