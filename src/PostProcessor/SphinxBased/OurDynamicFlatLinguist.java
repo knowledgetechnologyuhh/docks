@@ -82,7 +82,6 @@ public class OurDynamicFlatLinguist implements Linguist, Configurable {
     private AcousticModel acousticModel;
     private AcousticModel phoneLoopAcousticModel;
     private LogMath logMath;
-    private UnitManager unitManager;
     // ------------------------------------
     // Data that is configured by the
     // property sheet
@@ -103,7 +102,6 @@ public class OurDynamicFlatLinguist implements Linguist, Configurable {
     // -------------------------------------
     private SearchGraph searchGraph;
     private Logger logger;
-    private HMMPool hmmPool;
     SearchStateArc outOfGrammarGraph;
     private GrammarNode initialGrammarState;
 
@@ -122,7 +120,7 @@ public class OurDynamicFlatLinguist implements Linguist, Configurable {
     // an empty arc (just waiting for Noah, I guess)
     private final SearchStateArc[] EMPTY_ARCS = new SearchStateArc[0];
 
-    public OurDynamicFlatLinguist(AcousticModel acousticModel, Grammar grammar, UnitManager unitManager, 
+    public OurDynamicFlatLinguist(AcousticModel acousticModel, Grammar grammar, 
             double wordInsertionProbability, double silenceInsertionProbability, double unitInsertionProbability,
             double fillerInsertionProbability, float languageWeight, boolean addOutOfGrammarBranch,
             double outOfGrammarBranchProbability, double phoneInsertionProbability, AcousticModel phoneLoopAcousticModel) {
@@ -131,7 +129,6 @@ public class OurDynamicFlatLinguist implements Linguist, Configurable {
         this.acousticModel = acousticModel;
         logMath = LogMath.getInstance();
         this.grammar = grammar;
-        this.unitManager = unitManager;
 
         this.logWordInsertionProbability = logMath.linearToLog(wordInsertionProbability);
         this.logSilenceInsertionProbability = logMath.linearToLog(silenceInsertionProbability);
@@ -164,7 +161,6 @@ public class DynamicFlatLinguist Javadoc)
 
         logMath = LogMath.getInstance();
         grammar = (Grammar) ps.getComponent(GRAMMAR);
-        unitManager = (UnitManager) ps.getComponent(UNIT_MANAGER);
 
         // get the rest of the configuration data
         logWordInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
@@ -210,7 +206,6 @@ public class DynamicFlatLinguist Javadoc)
         logger.info("Allocating DFLAT");
         allocateAcousticModel();
         grammar.allocate();
-        hmmPool = new HMMPool(acousticModel, logger, unitManager);
         nodeToNextUnitArrayMap = new HashMap<GrammarNode, int[]>();
         nodeToUnitSetMap = new HashMap<GrammarNode, Set<Unit>>();
         Timer timer = TimerPool.getTimer(this, "compileGrammar");
@@ -703,8 +698,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public String getSignature() {
-            return "GS " + node + "-lc-" + hmmPool.getUnit(lc) + "-rc-" +
-                    hmmPool.getUnit(nextBaseID);
+            return "GS " + node + "-lc-";
         }
 
 
@@ -728,31 +722,10 @@ public class DynamicFlatLinguist Javadoc)
 
          */
         GrammarArc[] filter(GrammarArc[] arcs, int nextBase) {
-            if (nextBase != ANY) {
-                List<GrammarArc> list = new ArrayList<GrammarArc>();
-                for (GrammarArc arc : arcs) {
-                    GrammarNode node = arc.getGrammarNode();
-                    if (hasEntryContext(node, nextBase)) {
-                        list.add(arc);
-                    }
-                }
-                arcs = list.toArray(new GrammarArc[list.size()]);
-            }
+        	assert nextBase == ANY;
             return arcs;
         }
 
-
-        /**
-         * Determines if the given node starts with the specified unit
-         *
-         * @param node   the grammar node
-         * @param unitID the id of the unit
-
-         */
-        private boolean hasEntryContext(GrammarNode node, int unitID) {
-            Set<Unit> unitSet = nodeToUnitSetMap.get(node);
-            return unitSet.contains(hmmPool.getUnit(unitID));
-        }
 
         /**
          * Retain only the pronunciations that start with the unit indicated by
@@ -819,7 +792,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public String toString() {
-            return node + "[" + hmmPool.getUnit(lc) + ',' + hmmPool.getUnit(nextBaseID) + ']';
+            return node + "[" ; //+ hmmPool.getUnit(lc) + ',' + hmmPool.getUnit(nextBaseID) + ']';
         }
 
 
@@ -1088,9 +1061,6 @@ public class DynamicFlatLinguist Javadoc)
 
         private final PronunciationState pState;
         private final int index;
-        private final int lc;
-        private final int rc;
-        private final HMM hmm;
         private final boolean isLastUnitOfWord;
         
         private int numberOfTimesUsed = 0;
@@ -1119,12 +1089,6 @@ public class DynamicFlatLinguist Javadoc)
         OurFullHMMSearchState(PronunciationState p, int which, int lc, int rc) {
             this.pState = p;
             this.index = which;
-            this.lc = lc;
-            this.rc = rc;
-            int base =
-                    p.getPronunciation().getUnits()[which].getBaseID();
-            int id = hmmPool.buildID(base, lc, rc);
-            hmm = hmmPool.getHMM(id, getPosition());
             isLastUnitOfWord =
                     which == p.getPronunciation().getUnits().length - 1;
         }
@@ -1137,7 +1101,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public float getInsertionProbability() {
-            Unit unit = hmm.getBaseUnit();
+            Unit unit = pState.getPronunciation().getUnits()[index];
 
             if (unit.isSilence()) {
                 return logSilenceInsertionProbability;
@@ -1156,7 +1120,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public String toString() {
-            return hmm.getUnit().toString();
+        	return getUnit().toString();
         }
 
 
@@ -1167,9 +1131,10 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public int hashCode() {
+        	// TODO: maybe improve hash by using AtomicInteger.getNext() from a class variable
             return pState.getGrammarState().getGrammarNode().hashCode() * 29 +
                     pState.getPronunciation().hashCode() * 19 +
-                    index * 7 + 43 * lc + rc;
+                    index * 7 ; //+ 43 * lc + rc;
         }
 
 
@@ -1191,10 +1156,11 @@ public class DynamicFlatLinguist Javadoc)
                 // index equal
                 // rc equal
 
-                return pState.getGrammarState().getGrammarNode() ==
+                return index == other.index && 
+                		pState.getGrammarState().getGrammarNode() ==
                         other.pState.getGrammarState().getGrammarNode() &&
-                        pState.getPronunciation() == other.pState.getPronunciation() &&
-                        index == other.index && lc == other.lc && rc == other.rc;
+                        pState.getPronunciation() == other.pState.getPronunciation()
+                        ;
             } else {
                 return false;
             }
@@ -1208,7 +1174,7 @@ public class DynamicFlatLinguist Javadoc)
          */
         @Override
         public Unit getUnit() {
-            return hmm.getBaseUnit();
+        	return pState.getPronunciation().getUnits()[index];
         }
 
 
@@ -1261,16 +1227,6 @@ public class DynamicFlatLinguist Javadoc)
 
 
         /**
-         * Returns the HMM for this state
-         *
-         * @return the HMM
-         */
-        HMM getHMM() {
-            return hmm;
-        }
-
-
-        /**
          * Returns the order of this state type among all of the search states
          *
          * @return the order
@@ -1289,7 +1245,7 @@ public class DynamicFlatLinguist Javadoc)
         @Override
         public String getSignature() {
             return "HSS " + pState.getGrammarState().getGrammarNode() +
-                    pState.getPronunciation() + index + '-' + rc + '-' + lc;
+                    pState.getPronunciation() + index + '-'; 
         }
 
         /**
@@ -1298,7 +1254,7 @@ public class DynamicFlatLinguist Javadoc)
          * @return the right context unit ID
          */
         int getRC() {
-            return rc;
+            return 0;
         }
 
         @Override
@@ -1318,16 +1274,13 @@ public class DynamicFlatLinguist Javadoc)
             // of a word, if not get the next full hmm in the word
             // otherwise generate arcs to the next set of words
 
-//            Pronunciation pronunciation = pState.getPronunciation();
-            int nextLC = getHMM().getBaseUnit().getBaseID();
-
             if (!isLastUnitOfWord()) {
-                arcs = pState.getSuccessors(nextLC, index + 1);
+                arcs = pState.getSuccessors(0, index + 1);
             } else {
                 // we are at the end of the word, so we transit to the
                 // next grammar nodes
                 GrammarState gs = pState.getGrammarState();
-                arcs = gs.getNextGrammarStates(nextLC, getRC());
+                arcs = gs.getNextGrammarStates(0, getRC());
             }
             return arcs;
         }
@@ -1344,161 +1297,6 @@ public class DynamicFlatLinguist Javadoc)
 		}
     }
 
-    /** Represents a single hmm state in the search graph */
-    class HMMStateSearchState extends FlatSearchState implements
-            HMMSearchState, ScoreProvider {
-
-        private final OurFullHMMSearchState fullHMMSearchState;
-        private final HMMState hmmState;
-        private final float probability;
-    	
-
-
-        /**
-         * Creates an HMMStateSearchState
-         *
-         * @param hss      the parent hmm state
-         * @param hmmState which hmm state
-         */
-        HMMStateSearchState(OurFullHMMSearchState hss, HMMState hmmState) {
-            this(hss, hmmState, LogMath.LOG_ONE);
-        }
-
-
-        /**
-         * Creates an HMMStateSearchState
-         *
-         * @param hss      the parent hmm state
-         * @param hmmState which hmm state
-         * @param prob     the transition probability
-         */
-        HMMStateSearchState(OurFullHMMSearchState hss, HMMState hmmState,
-                            float prob) {
-            this.probability = prob;
-            fullHMMSearchState = hss;
-            this.hmmState = hmmState;
-        }
-
-        
-        /**
-         * Returns the acoustic probability for this state
-         * 
-         * @return the probability
-         */
-        @Override
-        public float getInsertionProbability() {
-            return probability;
-        } 
-
-        /**
-         * Generate a hashcode for an object
-         *
-         * @return the hashcode
-         */
-        @Override
-        public int hashCode() {
-            return 7 * fullHMMSearchState.hashCode() + hmmState.hashCode();
-        }
-
-
-        /**
-         * Determines if the given object is equal to this object
-         *
-         * @param o the object to test
-         * @return <code>true</code> if the object is equal to this
-         */
-        @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            } else if (o instanceof HMMStateSearchState) {
-                HMMStateSearchState other = (HMMStateSearchState) o;
-                return other.fullHMMSearchState.equals(fullHMMSearchState)
-                        && other.hmmState.equals(hmmState);
-            } else {
-                return false;
-            }
-        }
-
-
-        /**
-         * Determines if this state is an emitting state
-         *
-         * @return true if this is an emitting state
-         */
-        @Override
-        public boolean isEmitting() {
-            return hmmState.isEmitting();
-        }
-
-
-        /**
-         * Gets the set of successors for this state
-         *
-         * @return the set of successors
-         */
-        @Override
-        public SearchStateArc[] getSuccessors() {
-
-            SearchStateArc[] arcs = getCachedSuccessors();
-            if (arcs == null) {
-                if (hmmState.isExitState()) {
-                    arcs = fullHMMSearchState.getNextArcs();
-                } else {
-                    HMMStateArc[] next = hmmState.getSuccessors();
-                    arcs = new SearchStateArc[next.length];
-                    for (int i = 0; i < arcs.length; i++) {
-                        arcs[i] = new
-                                HMMStateSearchState(fullHMMSearchState,
-                                next[i].getHMMState(),
-                                next[i].getLogProbability());
-                    }
-                }
-                cacheSuccessors(arcs);
-            }
-            return arcs;
-        }
-
-
-        /**
-         * Returns the order of this state type among all of the search states
-         *
-         * @return the order
-         */
-        @Override
-        public int getOrder() {
-            return isEmitting() ? 4 : 0;
-        }
-
-
-        /**
-         * Returns a unique string representation of the state. This string is suitable (and typically used) for a label
-         * for a GDL node
-         *
-         * @return the signature
-         */
-        @Override
-        public String getSignature() {
-            return "HSSS " + fullHMMSearchState.getSignature() + '-' + hmmState;
-        }
-
-
-        /**
-         * Returns the hmm state for this search state
-         *
-         * @return the hmm state
-         */
-        @Override
-        public HMMState getHMMState() {
-            return hmmState;
-        }
-
-
-        @Override
-        public float getScore(Data data) {
-            return hmmState.getScore(data);
-        }
-    }
 
 
     /** The search graph that is produced by the flat linguist. */
