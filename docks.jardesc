@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="docks/bin/DOCKS.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/docks/docks.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/docks/sentences.txt"/>
+        <folder path="/docks/tools"/>
+        <file path="/docks/LICENSE.TXT"/>
+        <folder path="/docks/config"/>
+        <file path="/docks/.gitignore"/>
+        <folder path="/docks/doc"/>
+        <file path="/docks/README.md"/>
+        <javaElement handleIdentifier="=docks/src"/>
+        <file path="/docks/build.xml"/>
+        <file path="/docks/.git"/>
+        <folder path="/docks/lib"/>
+        <file path="/docks/.classpath"/>
+        <file path="/docks/grammar.gdl"/>
+        <file path="/docks/.project"/>
+    </selectedElements>
+</jardesc>
