@@ -50,4 +50,7 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    <target name="CreateJar" description="Create Jar file">
+        <jar jarfile="DOCKS.jar" basedir="bin" includes="**/*.class" />
+    </target>
 </project>
