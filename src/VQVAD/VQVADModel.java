@@ -32,24 +32,26 @@ public class VQVADModel {
 	public static VQVADModel train(DoubleData[] frames) {
 		OctaveEngine modelEngine = new OctaveEngineFactory().getScriptEngine();
 
+		double sampleRate = frames[0].getSampleRate();
+		int frameLength = frames[0].dimension();
+		double secsPerFrame = frameLength / sampleRate;
+
 		System.out.println("train(" + frames.length + ")");
 
 		double[] unboxedSignal = concatenateAndUnbox(frames);
 
 		OctaveDouble s = new OctaveDouble(unboxedSignal, unboxedSignal.length, 1);
-		OctaveDouble fs = Octave.scalar(frames[0].getSampleRate());
+		OctaveDouble fs = Octave.scalar(sampleRate);
 
 		modelEngine.put("s", s);
 		modelEngine.put("fs", fs);
 
-		//modelEngine.eval("cd lib");
 		modelEngine.eval("cd /home/nemo/Documents/Studium/Master/study/samplecode/VQVAD");
 		modelEngine.eval("[~, ~, params] = VQVAD;");
-		//modelEngine.eval("s");
-//		modelEngine.eval("[speechInd, LLR] = VQVAD(s, fs, params)");
+		modelEngine.eval("params.frame_len = " + (secsPerFrame) + ";");
+		modelEngine.eval("params.frame_shift = " + (secsPerFrame) + ";");
 		modelEngine.eval("[speech_model, nonspeech_model, params] = vqvad_train(s, fs, params);");
 
-		// TODO
 		return new VQVADModel(true, modelEngine);
 	}
 
@@ -68,22 +70,13 @@ public class VQVADModel {
 
 		double[] unboxedSignal = concatenateAndUnbox(frames);
 
-		System.out.println("classify signal length: " + unboxedSignal.length);
-
 		OctaveDouble signal = new OctaveDouble(unboxedSignal, unboxedSignal.length, 1);
 		modelEngine.put("signal",  signal);
-		modelEngine.eval("params.frame_len = 0.01;");
-		modelEngine.eval("params.frame_shift = 0.01;");
 		modelEngine.eval("[~, LLR] = vqvad_classify(signal, fs, speech_model, nonspeech_model, params);");
 		OctaveDouble llr = modelEngine.get(OctaveDouble.class, "LLR");
 
-		for (double v : llr.getData()) {
-			System.out.print(v);
-		}
-		System.out.println(".");
-		// TODO return true if LLR >= 0
-
-		// TODO
+		if (llr.size(1) > 0 && llr.get(1) >= 0)
+			return true;
 		return false;
 	}
 

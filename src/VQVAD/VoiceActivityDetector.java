@@ -52,6 +52,7 @@ public class VoiceActivityDetector extends AbstractVoiceActivityDetector {
 	public VoiceActivityDetector(int trainingFrameBufferSize) {
 		trainingFrameBuffer = new CircularFifoBuffer(trainingFrameBufferSize);
 		classifyFrameBuffer = new CircularFifoBuffer(trainingFrameBufferSize);
+
 		model = new VQVADModel();
 	}
 
