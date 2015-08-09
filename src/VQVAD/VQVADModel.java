@@ -10,9 +10,12 @@ import dk.ange.octave.type.Octave;
 import dk.ange.octave.type.OctaveDouble;
 import dk.ange.octave.type.OctaveObject;
 import dk.ange.octave.type.OctaveString;
+import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DoubleData;
 
-public class VQVADModel {
+public class VQVADModel implements Data {
+
+	private static final long serialVersionUID = 5646714890153166531L;
 
 	protected boolean isTrained = false;
 
@@ -69,6 +72,9 @@ public class VQVADModel {
 		}
 
 		double[] unboxedSignal = concatenateAndUnbox(frames);
+
+		double[] energies = EnergyUtility.computeEnergyPerFrame(frames);
+
 
 		OctaveDouble signal = new OctaveDouble(unboxedSignal, unboxedSignal.length, 1);
 		modelEngine.put("signal",  signal);
