@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -50,7 +51,11 @@ public class PlaybackTest {
 	 */
 	public static void main(String[] args) throws MalformedURLException {
 
-		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(null, "foo");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/foo.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/trainset/noizeus_train/10dB/sp12_train_sn10.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/trainset/noise_only.wav");
+
+		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
 
 		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
 

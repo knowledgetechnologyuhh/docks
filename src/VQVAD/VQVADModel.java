@@ -46,7 +46,7 @@ public class VQVADModel {
 		modelEngine.put("s", s);
 		modelEngine.put("fs", fs);
 
-		modelEngine.eval("cd /home/nemo/Documents/Studium/Master/study/samplecode/VQVAD");
+		modelEngine.eval("cd /home/nemo/Documents/Studium/Master/study/code/VQVAD");
 		modelEngine.eval("[~, ~, params] = VQVAD;");
 		modelEngine.eval("params.frame_len = " + (secsPerFrame) + ";");
 		modelEngine.eval("params.frame_shift = " + (secsPerFrame) + ";");

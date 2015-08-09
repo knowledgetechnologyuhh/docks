@@ -127,6 +127,8 @@ public class VoiceActivityDetector extends AbstractVoiceActivityDetector {
 			}
 		}
 
+		System.out.println(isSpeech);
+
 		return new SpeechClassifiedData(audio, isSpeech);
 	}
 

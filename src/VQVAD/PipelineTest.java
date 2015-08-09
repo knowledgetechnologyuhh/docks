@@ -20,7 +20,8 @@ public class PipelineTest {
 	 */
 	public static void main(String[] args) throws MalformedURLException {
 
-		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/foo.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/foo.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/samplecode/VQVAD/trainset/noizeus_train/10dB/sp12_train_sn10.wav");
 
 		//audio source with 3200 byte read per read
 		AudioFileDataSource audioDataSource = new AudioFileDataSource(3200, null);
