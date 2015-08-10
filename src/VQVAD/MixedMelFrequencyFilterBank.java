@@ -6,6 +6,10 @@ import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
 
 public class MixedMelFrequencyFilterBank extends MelFrequencyFilterBank {
 
+	public MixedMelFrequencyFilterBank(double minFreq, double maxFreq, int numFilters) {
+		super(minFreq, maxFreq, numFilters);
+	}
+
 	@Override
 	public Data getData() {
 		Data mfccData = super.getData();

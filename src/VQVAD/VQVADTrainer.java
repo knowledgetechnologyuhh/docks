@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
-import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
@@ -167,7 +166,8 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 */
 	protected DoublePoint[] trainCodebook(List<DoublePoint> cepstralCoefficients) {
 		if (cepstralCoefficients.size() < vqSize) {
-			throw new RuntimeException("Not enough training data to train model.");
+			throw new IllegalArgumentException("Not enough training data to train model: " +
+					"coefficient count " + cepstralCoefficients.size() + " < " + vqSize);
 		}
 
 		final List<CentroidCluster<DoublePoint>> centroids = clusterer.cluster(cepstralCoefficients);
