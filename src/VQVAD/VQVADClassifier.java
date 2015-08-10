@@ -24,7 +24,7 @@ public class VQVADClassifier extends BaseDataProcessor {
 		boolean isSpeech = true;
 
 		if (currentModel != null) {
-			isSpeech = currentModel.classify(new DoubleData[]{frame});
+			isSpeech = currentModel.classify(frame, mfcc);
 		}
 
 		return new SpeechClassifiedData(frame, isSpeech);

@@ -1,9 +1,15 @@
 package VQVAD;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
+import org.apache.commons.math3.ml.clustering.CentroidCluster;
+import org.apache.commons.math3.ml.clustering.Clusterable;
+import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
@@ -23,6 +29,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	/** Count of frames newly received (after training) */
 	protected int newFrameCount = 0;
 
+	/** Indicator whether there was already a model trained or not. */
 	protected boolean noModelTrainedYet = true;
 
 	/** Codebook size */
@@ -31,9 +38,19 @@ public class VQVADTrainer extends BaseDataProcessor {
 	/** "Fraction of high/low energy frames picked for speech/nonspeech codebook training" */
 	protected double energyFraction = 0.1;
 
+	/** Maximum number of k-means iterations */
+	protected int maxKmeansIter = 20;
+
+	/** Training is done by generating cluster points from this clusterer */
+	protected KMeansPlusPlusClusterer<DoublePoint> clusterer;
+
+	/** Minimum required energy level for the signal to be speech in dB */
+	protected double energyMinLevel = -75;
+
 
 	public VQVADTrainer() {
 		trainingFrameBuffer = new CircularFifoBuffer(DEFAULT_FRAME_BUFFER_SIZE);
+		clusterer = new KMeansPlusPlusClusterer<DoublePoint>(vqSize, maxKmeansIter);
 	}
 
 
@@ -121,37 +138,48 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 		final int nf = frames.length;
 		final int trainingFragmentSize = roundInt(nf * energyFraction);
-		final int mfccFeatureSize = mfccs[0].dimension();
 
-		final double[][] nonspeech_mfcc = new double[trainingFragmentSize][mfccFeatureSize];
-		final double[][] speech_mfcc = new double[trainingFragmentSize][mfccFeatureSize];
+		final List<DoublePoint> nonspeech_mfcc = new ArrayList<DoublePoint>(trainingFragmentSize);
+		final List<DoublePoint> speech_mfcc = new ArrayList<DoublePoint>(trainingFragmentSize);
 
 		// first trainingFragmentSize frames are nonspeech frames
-		// nonspeech_frames  = frame_idx(1:round(nf * params.energy_fraction));
-		for (int i=0; i < nonspeech_mfcc.length; i++)
-			nonspeech_mfcc[i] = mfccs[idx[i].intValue()].getValues();
+		for (int i=0; i < nonspeech_mfcc.size(); i++)
+			nonspeech_mfcc.add(new DoublePoint(mfccs[idx[i].intValue()].getValues()));
 
 		// last trainingFragmentSize frames are speech frames
 		for (int i=nf - trainingFragmentSize; i < nf; i++)
-			speech_mfcc[i] = mfccs[idx[i].intValue()].getValues();
+			speech_mfcc.add(new DoublePoint(mfccs[idx[i].intValue()].getValues()));
 
 		// % Train the speech and nonspeech models from the MFCC vectors corresponding
 		// % to the highest and lowest frame energies, respectively
-		final double[] speech_model    = trainCodebook(speech_mfcc);
-		final double[] nonspeech_model = trainCodebook(nonspeech_mfcc);
+		final DoublePoint[] speech_centroids    = trainCodebook(speech_mfcc);
+		final DoublePoint[] nonspeech_centroids = trainCodebook(nonspeech_mfcc);
 
-		// TODO
-		return null;
+		return new VQVADModel(speech_centroids, nonspeech_centroids, energyMinLevel);
 	}
 
-	protected double[] trainCodebook(double[][] cepstralCoefficients) {
-		if (cepstralCoefficients.length < vqSize) {
+	/**
+	 * Return the cluster center points. Each point is n-dimensional where n is the
+	 * number of cepstral coefficients used.
+	 *
+	 * @param cepstralCoefficients
+	 * @return
+	 */
+	protected DoublePoint[] trainCodebook(List<DoublePoint> cepstralCoefficients) {
+		if (cepstralCoefficients.size() < vqSize) {
 			throw new RuntimeException("Not enough training data to train model.");
 		}
 
-		// TODO: [C,junk] = my_kmeans(X, params.vq_size, params.max_kmeans_iter);
+		final List<CentroidCluster<DoublePoint>> centroids = clusterer.cluster(cepstralCoefficients);
+		final DoublePoint[] centers = new DoublePoint[centroids.size()];
 
-		return null;
+		int i = 0;
+		for (CentroidCluster<DoublePoint> c : centroids) {
+			centers[i] = new DoublePoint(c.getCenter().getPoint());
+			i++;
+		}
+
+		return centers;
 	}
 
 }

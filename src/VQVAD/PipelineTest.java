@@ -32,7 +32,7 @@ public class PipelineTest {
 		//blocks data into frames
 		pipeline.add(new DataBlocker(10));
 		//classifies speech frames
-		pipeline.add(new VoiceActivityDetector());
+		//pipeline.add(new VoiceActivityDetector());
 		//marks as speeech
 		pipeline.add(new SpeechMarker(200, 300, 100, 30, 100, 15.0));
 		//removes non speech

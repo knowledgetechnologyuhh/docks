@@ -1,15 +1,8 @@
 package VQVAD;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
-import dk.ange.octave.OctaveEngine;
-import dk.ange.octave.OctaveEngineFactory;
-import dk.ange.octave.type.Octave;
-import dk.ange.octave.type.OctaveDouble;
-import dk.ange.octave.type.OctaveObject;
-import dk.ange.octave.type.OctaveString;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DoubleData;
 
@@ -17,97 +10,48 @@ public class VQVADModel implements Data {
 
 	private static final long serialVersionUID = 5646714890153166531L;
 
-	protected boolean isTrained = false;
+	final protected DoublePoint[] speechCenters;
+	final protected DoublePoint[] nonspeechCenters;
+	final protected double energyMinLevel;
 
-	protected OctaveEngine modelEngine;
-
-
-	public VQVADModel() {
-		this(false, null);
+	public VQVADModel(DoublePoint[] speechCenters, DoublePoint[] nonspeechCenters, double energyMinLevel) {
+		this.speechCenters = speechCenters;
+		this.nonspeechCenters = nonspeechCenters;
+		this.energyMinLevel = energyMinLevel;
 	}
 
-	protected VQVADModel(boolean isTrained, OctaveEngine modelEngine) {
-		this.isTrained = isTrained;
-		this.modelEngine = modelEngine;
-	}
+	// pdist2(input, centers, "euclidean").^2
+	protected double minDistance(DoublePoint[] centers, double[] input) {
+		EuclideanDistance d = new EuclideanDistance();
+		double minDistance = Double.POSITIVE_INFINITY;
 
+		for (DoublePoint c : centers) {
+			double v = d.compute(c.getPoint(), input);
 
-	public static VQVADModel train(DoubleData[] frames) {
-		OctaveEngine modelEngine = new OctaveEngineFactory().getScriptEngine();
+			v = v * v;
 
-		double sampleRate = frames[0].getSampleRate();
-		int frameLength = frames[0].dimension();
-		double secsPerFrame = frameLength / sampleRate;
-
-		System.out.println("train(" + frames.length + ")");
-
-		double[] unboxedSignal = concatenateAndUnbox(frames);
-
-		OctaveDouble s = new OctaveDouble(unboxedSignal, unboxedSignal.length, 1);
-		OctaveDouble fs = Octave.scalar(sampleRate);
-
-		modelEngine.put("s", s);
-		modelEngine.put("fs", fs);
-
-		modelEngine.eval("cd /home/nemo/Documents/Studium/Master/study/code/VQVAD");
-		modelEngine.eval("[~, ~, params] = VQVAD;");
-		modelEngine.eval("params.frame_len = " + (secsPerFrame) + ";");
-		modelEngine.eval("params.frame_shift = " + (secsPerFrame) + ";");
-		modelEngine.eval("[speech_model, nonspeech_model, params] = vqvad_train(s, fs, params);");
-
-		return new VQVADModel(true, modelEngine);
-	}
-
-	public int getNecessaryClassificationSampleCount() {
-		return 80;
-	}
-
-	public boolean isTrained() {
-		return isTrained;
-	}
-
-	public boolean classify(DoubleData[] frames) {
-		if (!isTrained()) {
-			return false;
-		}
-
-		double[] unboxedSignal = concatenateAndUnbox(frames);
-
-		double[] energies = EnergyUtility.computeEnergyPerFrame(frames);
-
-
-		OctaveDouble signal = new OctaveDouble(unboxedSignal, unboxedSignal.length, 1);
-		modelEngine.put("signal",  signal);
-		modelEngine.eval("[~, LLR] = vqvad_classify(signal, fs, speech_model, nonspeech_model, params);");
-		OctaveDouble llr = modelEngine.get(OctaveDouble.class, "LLR");
-
-		if (llr.size(1) > 0 && llr.get(1) >= 0)
-			return true;
-		return false;
-	}
-
-	protected static double[] concatenateAndUnbox(DoubleData[] frames) {
-		List<Double> samples = new ArrayList<Double>();
-
-		for (DoubleData frame : frames) {
-			Double[] boxedValues = new Double[frame.dimension()];
-			double[] values = frame.getValues();
-
-			for (int i=0; i < values.length; i++) {
-				boxedValues[i] = Double.valueOf(values[i]);
+			if (v < minDistance) {
+				minDistance = v;
 			}
-
-			Collections.addAll(samples, boxedValues);
 		}
 
-		Double[] boxedSignal = samples.toArray(new Double[]{});
-		double[] unboxedSignal = new double[samples.size()];
+		return minDistance;
+	}
 
-		for (int i=0; i < samples.size(); i++) {
-			unboxedSignal[i] = boxedSignal[i].doubleValue();
-		}
+	/**
+	 *
+	 * @param frames MFCC for the frame
+	 * @return
+	 */
+	public boolean classify(DoubleData frame, DoubleData mfcc) {
+		double speechMinDistance = minDistance(speechCenters, mfcc.getValues());
+		double nonspeechMinDistance = minDistance(nonspeechCenters, mfcc.getValues());
 
-		return unboxedSignal;
+		double LLR = nonspeechMinDistance - speechMinDistance;
+
+		double energy = EnergyUtility.computeEnergy(frame);
+
+		return LLR >= 0 && energy >= energyMinLevel;
 	}
 
 	public static void main(String[] args) {
@@ -122,7 +66,7 @@ public class VQVADModel implements Data {
 		frames[1] = new DoubleData(new double[]{-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6}, 8000, 6);
 		frames[2] = new DoubleData(new double[]{6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1}, 8000, 12);
 
-		train(frames);
+
 	}
 
 }
