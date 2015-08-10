@@ -24,7 +24,6 @@ public class VQVADPipeline extends BaseDataProcessor {
 		pipeline.add(new Dither());
 		// TODO: SpectralSubtraction
 		pipeline.add(new RaisedCosineWindower(0, 30, 15));
-		//pipeline.add(new RaisedCosineWindower(0.46, 30, 30));
 		pipeline.add(new MixedMelFrequencyFilterBank(0, src.getSampleRate()/2, 27));
 		pipeline.add(new VQVADTrainer());
 		pipeline.add(new VQVADClassifier());

@@ -17,7 +17,6 @@ public class PlaybackTest {
 
 	private static AudioInputStream copyAis(AudioInputStream source, AudioFormat format) {
 		boolean run = true;
-		int i = 0;
 		int buffer_size = 4000;
 		byte tempBuffer[] = new byte[buffer_size];
 		ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
@@ -52,8 +51,8 @@ public class PlaybackTest {
 	public static void main(String[] args) throws MalformedURLException {
 
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/foo.wav");
-		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/10dB/sp12_train_sn10.wav");
-		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/10dB/sp12_train_sn10.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
 
 		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
 
