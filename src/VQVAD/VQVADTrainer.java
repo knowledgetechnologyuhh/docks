@@ -141,12 +141,12 @@ public class VQVADTrainer extends BaseDataProcessor {
 		final List<DoublePoint> nonspeech_mfcc = new ArrayList<DoublePoint>(trainingFragmentSize);
 		final List<DoublePoint> speech_mfcc = new ArrayList<DoublePoint>(trainingFragmentSize);
 
-		// first trainingFragmentSize frames are nonspeech frames
+		// first trainingFragmentSize frames are assumed to be nonspeech frames (lowest energy)
 		for (int i=0; i < trainingFragmentSize; i++) {
 			nonspeech_mfcc.add(new DoublePoint(mfccs[idx[i].intValue()].getValues()));
 		}
 
-		// last trainingFragmentSize frames are speech frames
+		// last trainingFragmentSize frames are assumed to be speech frames (highest energy)
 		for (int i=nf - trainingFragmentSize; i < nf; i++) {
 			speech_mfcc.add(new DoublePoint(mfccs[idx[i].intValue()].getValues()));
 		}

@@ -54,19 +54,4 @@ public class VQVADModel implements Data {
 		return LLR >= 0 && energy >= energyMinLevel;
 	}
 
-	public static void main(String[] args) {
-		System.out.println("LOL");
-//		OctaveEngine octave = new OctaveEngineFactory().getScriptEngine();
-//		octave.eval("cd ..");
-//		octave.eval("pwd");
-
-
-		DoubleData[] frames = new DoubleData[3];
-		frames[0] = new DoubleData(new double[]{1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6}, 8000, 0);
-		frames[1] = new DoubleData(new double[]{-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6,-1,-2,-3,-4,-5,-6}, 8000, 6);
-		frames[2] = new DoubleData(new double[]{6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1}, 8000, 12);
-
-
-	}
-
 }
