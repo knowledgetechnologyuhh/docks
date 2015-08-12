@@ -183,6 +183,9 @@ public class VQVADTrainer extends BaseDataProcessor {
 				mfccs[i] = packet.getMFCC();
 			}
 
+
+			newFrameCount = 0;
+
     		return trainNewModel(frames, mfccs);
     	}
 
