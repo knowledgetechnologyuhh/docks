@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.FrontEnd;
@@ -71,7 +72,19 @@ public class VQVADPipeline extends BaseDataProcessor {
 	 */
 	@Override
 	public Data getData() throws DataProcessingException {
-		return frontend.getData();
+		Data d = frontend.getData();
+
+		// This is a crappy workaround for bogus behaviour of
+		// Sphinx' AudioFileDataSource which does not send a
+		// DataEndSignal all the time. So if null data is reached
+		// we send the DataEndSignal ourselves and hope for the best.
+		//
+		// FIXME: This is fixed in Sphinx4 0.5-prealpha but porting DOCKS involves some more work.
+		if (d == null) {
+			return new DataEndSignal(42);
+		}
+
+		return d;
 	}
 
 }
