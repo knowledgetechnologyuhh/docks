@@ -170,7 +170,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 */
     @Override
     public Data getData() throws DataProcessingException {
-    	if (false && shouldTrain()) {
+    	if (shouldTrain()) {
 			final DoubleData[] frames = new DoubleData[trainingFrameBuffer.size()];
 			final DoubleData[] mfccs = new DoubleData[trainingFrameBuffer.size()];
 			final Object[] packets = trainingFrameBuffer.toArray();
