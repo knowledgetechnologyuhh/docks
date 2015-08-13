@@ -40,7 +40,7 @@ public class VQVADModel implements Data {
 	}
 
 	// pdist2(input, centers, "euclidean").^2
-	protected double minDistance(DoublePoint[] centers, double[] input) {
+	public double minDistance(DoublePoint[] centers, double[] input) {
 		EuclideanDistance d = new EuclideanDistance();
 		double minDistance = Double.POSITIVE_INFINITY;
 
@@ -67,7 +67,6 @@ public class VQVADModel implements Data {
 		double nonspeechMinDistance = minDistance(nonspeechCenters, mfcc.getValues());
 
 		double LLR = nonspeechMinDistance - speechMinDistance;
-
 		double energy = EnergyUtility.computeEnergy(frame);
 
 		return LLR >= 0 && energy >= energyMinLevel;

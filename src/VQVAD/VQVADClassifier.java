@@ -62,8 +62,9 @@ public class VQVADClassifier extends BaseDataProcessor {
     public Data getData() throws DataProcessingException {
          Data data = getPredecessor().getData();
 
-        if (data instanceof VQVADModel)
+        if (data instanceof VQVADModel) {
         	currentModel = (VQVADModel) data;
+        }
 
         if (data instanceof MFCCPacket) {
         	// Audio data
