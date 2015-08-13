@@ -31,6 +31,7 @@ import javax.sound.sampled.AudioInputStream;
 import Utils.Player;
 
 import Frontend.VQVoiceActivityDetector;
+import Frontend.VoiceActivityDetector;
 
 public class PlaybackTest {
 
@@ -70,16 +71,21 @@ public class PlaybackTest {
 	public static void main(String[] args) throws MalformedURLException {
 
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/foo.wav");
-		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/10dB/sp12_train_sn10.wav");
-		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
 
-		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 16000, "foo");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_10dB/sp12_train_sn10.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_5dB/sp12_train_sn5.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/car_10dB/sp12_car_sn10.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_then_noise_only.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
+
+		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
+		//VoiceActivityDetector vac = new VoiceActivityDetector(path, 8000, "foo");
 
 		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
 
 		Player.playStream(debugAis);
-
-
 	}
 
 }
