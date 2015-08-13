@@ -121,6 +121,7 @@ public class ConfigCreator {
 		createSentenceList(batchfile, basepath+configname + ".sentences.txt");
 		//remove dublicates
 		sentenceFileDeleteDublicates(basepath+configname+".sentences.txt");
+		PhonemeCreator pc = new PhonemeCreator(basepath+configname+".sentences");
 		//create word list
 		sentenceListToWordList(basepath+configname + ".sentences.txt", basepath+configname
 				+ ".words.txt");
