@@ -8,9 +8,8 @@ import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FrontEnd;
-import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
+import edu.cmu.sphinx.frontend.denoise.Denoise;
 import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
-import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
 import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform2;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 
@@ -26,6 +25,7 @@ public class MFCCPipeline extends BaseDataProcessor {
 
 		pipeline.add(singleDataBuffer);
 		pipeline.add(new DiscreteFourierTransform());
+		pipeline.add(new Denoise());
 		pipeline.add(new MelFrequencyFilterBank(minFreq, maxFreq, numFilters));
 		pipeline.add(new DiscreteCosineTransform2(numFilters, 12));
 
