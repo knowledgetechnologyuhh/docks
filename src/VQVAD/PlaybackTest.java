@@ -21,12 +21,17 @@ package VQVAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+
+import com.sun.media.sound.WaveFileWriter;
 
 import Utils.Player;
 
@@ -66,9 +71,9 @@ public class PlaybackTest {
 
 	/**
 	 * @param args
-	 * @throws MalformedURLException
+	 * @throws IOException
 	 */
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) throws IOException {
 
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/foo.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
@@ -77,13 +82,19 @@ public class PlaybackTest {
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_5dB/sp12_train_sn5.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/car_10dB/sp12_car_sn10.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_then_noise_only.wav");
-		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise.wav");
-		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
 
 		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
 		//VoiceActivityDetector vac = new VoiceActivityDetector(path, 8000, "foo");
 
 		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
+
+		WaveFileWriter w = new WaveFileWriter();
+		FileOutputStream of = new FileOutputStream("/home/nemo/Documents/Studium/Master/study/test_out.wav");
+
+		w.write(debugAis, AudioFileFormat.Type.WAVE, of);
+		debugAis.reset();
 
 		Player.playStream(debugAis);
 	}
