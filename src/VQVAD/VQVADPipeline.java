@@ -54,10 +54,11 @@ public class VQVADPipeline extends BaseDataProcessor {
 
 		pipeline.add(src);
 		pipeline.add(new Dither());
-		pipeline.add(new RaisedCosineWindower(0, 30, 30));
+		pipeline.add(new RaisedCosineWindower(0, 30, 10));
 		pipeline.add(new MFCCPipeline(0, src.getSampleRate()/2, 27));
 		pipeline.add(new VQVADTrainer());
 		pipeline.add(new VQVADClassifier());
+		pipeline.add(new FrameOverlapFilter(30, 10));
 
 		frontend = new FrontEnd(pipeline);
 	}
@@ -71,6 +72,7 @@ public class VQVADPipeline extends BaseDataProcessor {
 	@Override
 	public Data getData() throws DataProcessingException {
 		Data d = frontend.getData();
+
 
 		// This is a crappy workaround for bogus behaviour of
 		// Sphinx' AudioFileDataSource which does not send a
