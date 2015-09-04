@@ -275,6 +275,8 @@ public class VQVADTrainer extends BaseDataProcessor {
 		final DoublePoint[] speech_centroids    = trainCodebook(speech_mfcc);
 		final DoublePoint[] nonspeech_centroids = trainCodebook(nonspeech_mfcc);
 
+		//dumpCentroids(speech_centroids, nonspeech_centroids);
+
 		return new VQVADModel(speech_centroids, nonspeech_centroids, energyMinLevel);
 	}
 
@@ -301,6 +303,30 @@ public class VQVADTrainer extends BaseDataProcessor {
 		}
 
 		return centers;
+	}
+
+	/**
+	 * Just an utility function to generate the default models seen in getDefaultModel().
+	 *
+	 * @param speech_centroids
+	 * @param nonspeech_centroids
+	 */
+	protected void dumpCentroids(DoublePoint[] speech_centroids, DoublePoint[] nonspeech_centroids) {
+		for (int i=0; i < speech_centroids.length; i++) {
+			System.out.print("speech_model[" + i + "] = new DoublePoint(new double[]{");
+			for (double v : speech_centroids[i].getPoint()) {
+				System.out.print(v + ",");
+			}
+			System.out.println("});");
+		}
+
+		for (int i=0; i < nonspeech_centroids.length; i++) {
+			System.out.print("nonspeech_model[" + i + "] = new DoublePoint(new double[]{");
+			for (double v : nonspeech_centroids[i].getPoint()) {
+				System.out.print(v + ",");
+			}
+			System.out.println("});");
+		}
 	}
 
 	/**
