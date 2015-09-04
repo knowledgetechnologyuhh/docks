@@ -106,6 +106,9 @@ public class VQVADTrainer extends BaseDataProcessor {
 	/** Minimum required energy level for the signal to be speech in dB */
 	protected double energyMinLevel = -75;
 
+	/** State whether the default model should be sent via getData or not. Set in reset() on data begin */
+	protected boolean shouldSendInitialModel = false;
+
 
 	/**
 	 * Create a trainer with default values. Should work fine for most cases.
@@ -148,6 +151,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 	void reset() {
 		newFrameCount = 0;
+		shouldSendInitialModel = true;
 	}
 
 	/**
@@ -170,6 +174,11 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 */
     @Override
     public Data getData() throws DataProcessingException {
+    	if (shouldSendInitialModel) {
+    		shouldSendInitialModel = false;
+            return getDefaultModel();
+    	}
+
     	if (shouldTrain()) {
 			final DoubleData[] frames = new DoubleData[trainingFrameBuffer.size()];
 			final DoubleData[] mfccs = new DoubleData[trainingFrameBuffer.size()];
@@ -191,7 +200,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 
         if (data instanceof DataStartSignal) {
             reset();
-            return getDefaultModel();
+            return data;
         }
 
         if (data instanceof MFCCPacket) {
