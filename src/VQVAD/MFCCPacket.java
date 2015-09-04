@@ -32,8 +32,8 @@ public class MFCCPacket implements Data {
 
 	private static final long serialVersionUID = -8383714866669035326L;
 
-	protected DoubleData audio;
-	protected DoubleData mfcc;
+	protected final DoubleData audio;
+	protected final DoubleData mfcc;
 
 	public MFCCPacket(DoubleData audio, DoubleData mfcc) {
 		this.audio = audio;
