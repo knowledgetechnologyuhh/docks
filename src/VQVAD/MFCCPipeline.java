@@ -10,8 +10,11 @@ import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FrontEnd;
 import edu.cmu.sphinx.frontend.denoise.Denoise;
 import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
+import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
 import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform2;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
+import edu.cmu.sphinx.util.props.S4Double;
+import edu.cmu.sphinx.util.props.S4Integer;
 
 public class MFCCPipeline extends BaseDataProcessor {
 
@@ -23,10 +26,44 @@ public class MFCCPipeline extends BaseDataProcessor {
 
 		singleDataBuffer = new SingleDataBuffer();
 
+		Denoise denoise;
+		// Load default configuration for Denoise component.
+		try {
+			denoise = new Denoise(
+				Denoise.class.getField("LAMBDA_POWER")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("LAMBDA_A")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("LAMBDA_B")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("LAMBDA_T")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("MU_T")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("EXCITATION_THRESHOLD")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("MAX_GAIN")
+				        .getAnnotation(S4Double.class)
+				        .defaultValue(),
+				Denoise.class.getField("SMOOTH_WINDOW")
+				        .getAnnotation(S4Integer.class)
+				        .defaultValue());
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException("Programming error: field does not exist. Original exception:" + e.getMessage());
+		} catch (SecurityException e) {
+			throw new RuntimeException("VM does not allow access to our own annotations. Original exception:" + e.getMessage());
+		}
+
 		pipeline.add(singleDataBuffer);
 		pipeline.add(new DiscreteFourierTransform());
-		pipeline.add(new Denoise());
 		pipeline.add(new MelFrequencyFilterBank(minFreq, maxFreq, numFilters));
+		pipeline.add(denoise);
 		pipeline.add(new DiscreteCosineTransform2(numFilters, 12));
 
 		frontend = new FrontEnd(pipeline);
