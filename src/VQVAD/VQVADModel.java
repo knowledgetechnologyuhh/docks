@@ -39,6 +39,59 @@ public class VQVADModel implements Data {
 		this.energyMinLevel = energyMinLevel;
 	}
 
+
+	public DoublePoint[] getSpeechCenters() {
+		return speechCenters;
+	}
+
+
+	public DoublePoint[] getNonspeechCenters() {
+		return nonspeechCenters;
+	}
+
+	protected DoublePoint mergeValues(DoublePoint mine, DoublePoint other, double lambda) {
+		final double[] myValues = mine.getPoint();
+		final double[] otherValues = other.getPoint();
+		double[] mergedValues = new double[myValues.length];
+
+		for (int i=0; i < mergedValues.length; i++) {
+			mergedValues[i] = lambda * otherValues[i] + (1-lambda) * myValues[i];
+		}
+
+		return new DoublePoint(mergedValues);
+	}
+
+	/**
+	 * Merge the centroids of this model with the centroids of another model.
+	 *
+	 * The semantic behind this is that the values from the other model are
+	 * from a newer model but not necessarily correct so we add them in a
+	 * weighted fashion, lambda being the weight:
+	 *
+	 *   model_values = lambda * new_model_values + (1-lambda) * old_model_values
+	 *
+	 * @param other
+	 * @param lambda
+	 * @return
+	 */
+	public VQVADModel merge(VQVADModel other, double lambda) {
+		final DoublePoint[] mergedSpeechCenters = new DoublePoint[speechCenters.length];
+		final DoublePoint[] mergedNonspeechCenters = new DoublePoint[nonspeechCenters.length];
+
+		final DoublePoint[] otherSpeechCenters = other.getSpeechCenters();
+		final DoublePoint[] otherNonspeechCenters = other.getNonspeechCenters();
+
+		for (int i=0; i < mergedSpeechCenters.length; i++) {
+			mergedSpeechCenters[i] = mergeValues(speechCenters[i], otherSpeechCenters[i], lambda);
+		}
+
+		for (int i=0; i < mergedNonspeechCenters.length; i++) {
+			mergedNonspeechCenters[i] = mergeValues(nonspeechCenters[i], otherNonspeechCenters[i], lambda);
+		}
+
+		return new VQVADModel(mergedSpeechCenters, mergedNonspeechCenters, energyMinLevel);
+	}
+
 	// pdist2(input, centers, "euclidean").^2
 	public double minDistance(DoublePoint[] centers, double[] input) {
 		EuclideanDistance d = new EuclideanDistance();

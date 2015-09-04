@@ -41,6 +41,24 @@ public class VQVADClassifier extends BaseDataProcessor {
 
 	protected VQVADModel currentModel;
 
+	protected double lambda = 0.8;
+
+	public VQVADClassifier() {}
+
+	/**
+	 * Allows for setting the learning rate of new models.
+	 *
+	 * The values of the new model will be weighted with lambda while the
+	 * values of the old model will be weighted with (1-lambda):
+	 *
+	 *  model_values = lambda * new_model_values + (1-lambda) * old_model_values
+	 *
+	 * @param lambda
+	 */
+	public VQVADClassifier(double lambda) {
+		this.lambda = lambda;
+	}
+
 	/**
 	 * Defaults to a speech classification to avoid data loss if no model
 	 * is trained yet.
@@ -63,7 +81,11 @@ public class VQVADClassifier extends BaseDataProcessor {
          Data data = getPredecessor().getData();
 
         if (data instanceof VQVADModel) {
-        	currentModel = (VQVADModel) data;
+        	if (currentModel == null) {
+        		currentModel = (VQVADModel) data;
+        	} else {
+        		currentModel = currentModel.merge((VQVADModel) data, lambda);
+        	}
         }
 
         if (data instanceof MFCCPacket) {
