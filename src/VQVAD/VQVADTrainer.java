@@ -172,14 +172,14 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * When a new model is trained, the model is returned as data before getting the
 	 * predecessor's data. Otherwise, every incoming packet is forwarded so no data is lost.
 	 */
-    @Override
-    public Data getData() throws DataProcessingException {
-    	if (shouldSendInitialModel) {
-    		shouldSendInitialModel = false;
-            return getDefaultModel();
-    	}
+	@Override
+	public Data getData() throws DataProcessingException {
+		if (shouldSendInitialModel) {
+			shouldSendInitialModel = false;
+			return getDefaultModel();
+		}
 
-    	if (shouldTrain()) {
+		if (shouldTrain()) {
 			final DoubleData[] frames = new DoubleData[trainingFrameBuffer.size()];
 			final DoubleData[] mfccs = new DoubleData[trainingFrameBuffer.size()];
 			final Object[] packets = trainingFrameBuffer.toArray();
@@ -193,62 +193,63 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 			newFrameCount = 0;
 
-    		return trainNewModel(frames, mfccs);
-    	}
 
-        final Data data = getPredecessor().getData();
+			return trainNewModel(frames, mfccs);
+		}
 
-        if (data instanceof DataStartSignal) {
-            reset();
-            return data;
-        }
+		final Data data = getPredecessor().getData();
 
-        if (data instanceof MFCCPacket) {
-            trainingFrameBuffer.add(data);
-            newFrameCount++;
-        }
+		if (data instanceof DataStartSignal) {
+			reset();
+			return data;
+		}
 
-        return data;
-    }
+		if (data instanceof MFCCPacket) {
+			trainingFrameBuffer.add(data);
+			newFrameCount++;
+		}
+
+		return data;
+	}
 
 
-    /**
-     * Matlab equivalent of [~,idx] = sort(energies)
-     *
-     * @param energies
-     * @return
-     */
-    public Integer[] sortedEnergyIndices(final double[] energies) {
-    	final Integer[] idx = new Integer[energies.length];
+	/**
+	 * Matlab equivalent of [~,idx] = sort(energies)
+	 *
+	 * @param energies
+	 * @return
+	 */
+	public Integer[] sortedEnergyIndices(final double[] energies) {
+		final Integer[] idx = new Integer[energies.length];
 
 		for(int i=0; i < energies.length; i++)
 			idx[i] = i;
 
 		Arrays.sort(idx, new Comparator<Integer>() {
-		    @Override public int compare(final Integer o1, final Integer o2) {
-		        return Double.compare(energies[o1], energies[o2]);
-		    }
+			@Override public int compare(final Integer o1, final Integer o2) {
+				return Double.compare(energies[o1], energies[o2]);
+			}
 		});
 
 		return idx;
-    }
+	}
 
-    protected int roundInt(double x) {
-    	return (int) Math.floor(x + 0.5);
-    }
+	protected int roundInt(double x) {
+		return (int) Math.floor(x + 0.5);
+	}
 
-    /**
-     * Trains a new model based on the gathered MFCCs.
-     *
-     * The MFCC vectors are sorted according to the energy per frame.
-     * The highest energyFraction number of MFCC vectors are used to train
-     * the speech model while the non-speech model is trained on the
-     * lowest-energy energyFraction number of MFCC vectors.
-     *
-     * @param frames Audio input frames
-     * @param mfccs Cepstral coefficients corresponding to the input frames
-     * @return
-     */
+	/**
+	 * Trains a new model based on the gathered MFCCs.
+	 *
+	 * The MFCC vectors are sorted according to the energy per frame.
+	 * The highest energyFraction number of MFCC vectors are used to train
+	 * the speech model while the non-speech model is trained on the
+	 * lowest-energy energyFraction number of MFCC vectors.
+	 *
+	 * @param frames Audio input frames
+	 * @param mfccs Cepstral coefficients corresponding to the input frames
+	 * @return
+	 */
 	protected VQVADModel trainNewModel(DoubleData[] frames, DoubleData[] mfccs) {
 		final double[] energies = EnergyUtility.computeEnergyPerFrame(frames);
 
@@ -272,7 +273,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 		// % Train the speech and non-speech models from the MFCC vectors corresponding
 		// % to the highest and lowest frame energies, respectively
-		final DoublePoint[] speech_centroids    = trainCodebook(speech_mfcc);
+		final DoublePoint[] speech_centroids	= trainCodebook(speech_mfcc);
 		final DoublePoint[] nonspeech_centroids = trainCodebook(nonspeech_mfcc);
 
 		//dumpCentroids(speech_centroids, nonspeech_centroids);
