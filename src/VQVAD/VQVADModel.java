@@ -52,7 +52,7 @@ public class VQVADModel implements Data {
 	protected DoublePoint mergeValues(DoublePoint mine, DoublePoint other, double lambda) {
 		final double[] myValues = mine.getPoint();
 		final double[] otherValues = other.getPoint();
-		double[] mergedValues = new double[myValues.length];
+		final double[] mergedValues = new double[myValues.length];
 
 		for (int i=0; i < mergedValues.length; i++) {
 			mergedValues[i] = lambda * otherValues[i] + (1-lambda) * myValues[i];
