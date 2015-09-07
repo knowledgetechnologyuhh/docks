@@ -208,7 +208,6 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 		if (data instanceof DataStartSignal) {
 			reset();
-			return data;
 		}
 
 		if (data instanceof MFCCPacket) {
@@ -257,7 +256,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * @param mfccs Cepstral coefficients corresponding to the input frames
 	 * @return
 	 */
-	protected VQVADModel trainNewModel(DoubleData[] frames, DoubleData[] mfccs) {
+	protected VQVADModel trainNewModel(final DoubleData[] frames, final DoubleData[] mfccs) {
 		final double[] energies = EnergyUtility.computeEnergyPerFrame(frames);
 
 		final Integer[] idx = sortedEnergyIndices(energies);
@@ -295,7 +294,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * @param cepstralCoefficients
 	 * @return
 	 */
-	protected DoublePoint[] trainCodebook(List<DoublePoint> cepstralCoefficients) {
+	protected DoublePoint[] trainCodebook(final List<DoublePoint> cepstralCoefficients) {
 		if (cepstralCoefficients.size() < vqSize) {
 			throw new IllegalArgumentException("Not enough training data to train model: " +
 					"coefficient count " + cepstralCoefficients.size() + " < " + vqSize);
@@ -319,7 +318,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * @param speech_centroids
 	 * @param nonspeech_centroids
 	 */
-	protected void dumpCentroids(DoublePoint[] speech_centroids, DoublePoint[] nonspeech_centroids) {
+	protected void dumpCentroids(final DoublePoint[] speech_centroids, final DoublePoint[] nonspeech_centroids) {
 		for (int i=0; i < speech_centroids.length; i++) {
 			System.out.print("speech_model[" + i + "] = new DoublePoint(new double[]{");
 			for (double v : speech_centroids[i].getPoint()) {
