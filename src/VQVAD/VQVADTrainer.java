@@ -81,8 +81,11 @@ import edu.cmu.sphinx.frontend.DoubleData;
  */
 public class VQVADTrainer extends BaseDataProcessor {
 
-	/** 200 frames are captured for training by default */
-	final static int DEFAULT_FRAME_BUFFER_SIZE = 200;
+	/** The number of frames captured for training by default */
+	final static int DEFAULT_FRAME_BUFFER_SIZE = 800;
+
+	/** The default minimum number of frames that are needed for training */
+	final static int DEFAULT_MIN_FRAME_NUMBER = 200;
 
 	/** Default maximum number of k-means iterations */
 	final static int DEFAULT_KMEANS_MAX_ITER = 20;
@@ -108,6 +111,9 @@ public class VQVADTrainer extends BaseDataProcessor {
 
 	/** State whether the default model should be sent via getData or not. Set in reset() on data begin */
 	protected boolean shouldSendInitialModel = false;
+
+	/** Minimum number of frames that are needed to start training */
+	protected int minFrameCount = DEFAULT_MIN_FRAME_NUMBER;
 
 
 	/**
@@ -139,7 +145,8 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * @param vqSize
 	 * @param maxKMeansIter
 	 */
-	public VQVADTrainer(int trainingBufferSize, double energyMinLevel, double energyFraction, int vqSize, int maxKMeansIter) {
+	public VQVADTrainer(int trainingBufferSize, int minFrameCount, double energyMinLevel, double energyFraction, int vqSize, int maxKMeansIter) {
+		this.minFrameCount = minFrameCount;
 		this.energyMinLevel = energyMinLevel;
 		this.energyFraction = energyFraction;
 		this.vqSize = vqSize;
@@ -162,7 +169,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	 * @return
 	 */
 	protected boolean shouldTrain() {
-		return trainingFrameBuffer.isFull() && newFrameCount == trainingFrameBuffer.size();
+		return newFrameCount == minFrameCount;
 	}
 
 	/**
