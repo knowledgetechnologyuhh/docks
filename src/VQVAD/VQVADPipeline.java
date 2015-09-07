@@ -54,13 +54,15 @@ public class VQVADPipeline extends BaseDataProcessor {
 
 		float frame_length_ms = 30;
 		float frame_shift_ms = 10;
+		double lower_freq = 0;
+		double learning_rate = 0.995;
 
 		pipeline.add(src);
 		pipeline.add(new Dither());
 		pipeline.add(new RaisedCosineWindower(0, frame_length_ms, frame_shift_ms));
-		pipeline.add(new MFCCPipeline(0, src.getSampleRate()/2, 27));
+		pipeline.add(new MFCCPipeline(lower_freq, src.getSampleRate()/2, 27));
 		pipeline.add(new VQVADTrainer());
-		pipeline.add(new VQVADClassifier(0.995));
+		pipeline.add(new VQVADClassifier(learning_rate));
 		pipeline.add(new FrameOverlapFilter(frame_length_ms, frame_shift_ms));
 		pipeline.add(new ClassificationResultDumper("/tmp/vqvad_classification_result"));
 
