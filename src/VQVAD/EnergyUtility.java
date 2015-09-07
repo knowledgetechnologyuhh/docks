@@ -23,28 +23,36 @@ import edu.cmu.sphinx.frontend.DoubleData;
 
 public class EnergyUtility {
 
-    // 20*log10(std(frame)+eps);
+	// matlab epsilon
+	public final static double eps = 2.2204e-16;
+
+	// std (x) = sqrt ( 1/(N-1) SUM_i (x(i) - mean(x))^2 )
+	public static double std(DoubleData frame) {
+		double std = 0;
+		double mean = 0;
+
+		for (double v : frame.getValues()) {
+			mean += v;
+		}
+
+		mean /= frame.dimension();
+
+		for (double v : frame.getValues()) {
+			std += (v - mean) * (v - mean);
+		}
+
+		std /= frame.dimension() - 1;
+
+		return Math.sqrt(std);
+	}
+
+    // as seen in VQVAD
     public static double computeEnergy(DoubleData frame) {
-    	double energy = 0;
-
-    	// std(frame) = sqrt(mean(abs(x - x.mean())**2))
-    	double mean = 0;
-    	for (double v : frame.getValues()) {
-    		mean += v;
-    	}
-    	mean /= frame.dimension();
-    	for(double v : frame.getValues()) {
-    		double abs = Math.abs(v - mean);
-    		energy += abs * abs;
-    	}
-    	energy /= frame.dimension();
-
-    	// 20*log10(std(frame) + eps)
-    	return 20 * Math.log10(Math.sqrt(energy) + Double.MIN_NORMAL);
+    	return 20 * Math.log10(std(frame) + eps);
     }
 
     public static double[] computeEnergyPerFrame(DoubleData[] frames) {
-    	double[] energies = new double[frames.length];
+    	final double[] energies = new double[frames.length];
     	for (int i = 0; i < frames.length; i++) {
     		energies[i] = computeEnergy(frames[i]);
     	}
