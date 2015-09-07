@@ -59,6 +59,7 @@ public class VQVADPipeline extends BaseDataProcessor {
 		pipeline.add(new VQVADTrainer());
 		pipeline.add(new VQVADClassifier());
 		pipeline.add(new FrameOverlapFilter(30, 10));
+		pipeline.add(new ClassificationResultDumper("/tmp/vqvad_classification_result"));
 
 		frontend = new FrontEnd(pipeline);
 	}
