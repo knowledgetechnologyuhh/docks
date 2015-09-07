@@ -10,15 +10,15 @@ import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
  */
 public class FrameOverlapFilter extends BaseDataProcessor {
 
-	protected int frameShift;
-	protected int frameLen;
+	protected float frameShift;
+	protected float frameLen;
 	protected int frameCounter = 0;
 
 	protected long lastSampleNumber = 0;
 
-	public FrameOverlapFilter(int frameLen, int frameShift) {
-		this.frameShift = frameShift;
-		this.frameLen = frameLen;
+	public FrameOverlapFilter(float frame_length_ms, float frame_shift_ms) {
+		this.frameShift = frame_shift_ms;
+		this.frameLen = frame_length_ms;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class FrameOverlapFilter extends BaseDataProcessor {
 		if (d instanceof SpeechClassifiedData) {
 			SpeechClassifiedData sd = (SpeechClassifiedData) d;
 
-			int windowLength = (int) (((double)frameLen/1000) * sd.getSampleRate());
+			int windowLength = (int) ((frameLen/1000) * sd.getSampleRate());
 
 			if (lastSampleNumber == 0 || sd.getFirstSampleNumber() - lastSampleNumber == windowLength) {
 				lastSampleNumber = sd.getFirstSampleNumber();
