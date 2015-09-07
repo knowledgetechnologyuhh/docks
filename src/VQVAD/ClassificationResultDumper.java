@@ -10,6 +10,14 @@ import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
 
+/**
+ * Write the classification result (speech/non-speech) to the file
+ * specified in the given path.
+ *
+ * The output consists of one line with either the character 'O'
+ * for a frame that was classified as speech or '_' for a frame
+ * that was classified as non-speech.
+ */
 public class ClassificationResultDumper extends BaseDataProcessor {
 
 	protected boolean dumpClassificationResult = false;
