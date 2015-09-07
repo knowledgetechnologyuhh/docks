@@ -30,30 +30,30 @@ public class MFCCPipeline extends BaseDataProcessor {
 		// Load default configuration for Denoise component.
 		try {
 			denoise = new Denoise(
-				Denoise.class.getField("LAMBDA_POWER")
+				0.7, /*Denoise.class.getField("LAMBDA_POWER")
 				        .getAnnotation(S4Double.class)
-				        .defaultValue(),
-				Denoise.class.getField("LAMBDA_A")
+				        .defaultValue(),*/
+				0.995, /*Denoise.class.getField("LAMBDA_A")
 				        .getAnnotation(S4Double.class)
-				        .defaultValue(),
-				Denoise.class.getField("LAMBDA_B")
+				        .defaultValue(),*/
+				0.85, /*Denoise.class.getField("LAMBDA_B")
 				        .getAnnotation(S4Double.class)
-				        .defaultValue(),
+				        .defaultValue(),*/
 				Denoise.class.getField("LAMBDA_T")
 				        .getAnnotation(S4Double.class)
 				        .defaultValue(),
 				Denoise.class.getField("MU_T")
 				        .getAnnotation(S4Double.class)
 				        .defaultValue(),
-				Denoise.class.getField("EXCITATION_THRESHOLD")
+				4, /*Denoise.class.getField("EXCITATION_THRESHOLD")
 				        .getAnnotation(S4Double.class)
-				        .defaultValue(),
-				Denoise.class.getField("MAX_GAIN")
+				        .defaultValue(),*/
+				200, /*Denoise.class.getField("MAX_GAIN")
 				        .getAnnotation(S4Double.class)
-				        .defaultValue(),
-				Denoise.class.getField("SMOOTH_WINDOW")
+				        .defaultValue(),*/
+				10 /*Denoise.class.getField("SMOOTH_WINDOW")
 				        .getAnnotation(S4Integer.class)
-				        .defaultValue());
+				        .defaultValue()*/);
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException("Programming error: field does not exist. Original exception:" + e.getMessage());
 		} catch (SecurityException e) {
