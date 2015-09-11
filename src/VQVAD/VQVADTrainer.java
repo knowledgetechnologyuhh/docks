@@ -101,12 +101,13 @@ public class VQVADTrainer extends BaseDataProcessor {
 	protected int vqSize = 16;
 
 	/** "Fraction of high/low energy frames picked for speech/nonspeech codebook training" */
-	protected double energyFraction = 0.1;
+	protected double energyFraction = 0.10;
 
 	/** Training is done by generating cluster points from this clusterer */
 	protected KMeansPlusPlusClusterer<DoublePoint> clusterer;
 
 	/** Minimum required energy level for the signal to be speech in dB */
+	// FIXME: energy does not appear to be negative. Investigate.
 	protected double energyMinLevel = -75;
 
 	/** State whether the default model should be sent via getData or not. Set in reset() on data begin */

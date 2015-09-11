@@ -92,7 +92,7 @@ public class VQVADModel implements Data {
 		return new VQVADModel(mergedSpeechCenters, mergedNonspeechCenters, energyMinLevel);
 	}
 
-	// pdist2(input, centers, "euclidean").^2
+	// min(pdist2(input, centers, "euclidean").^2)
 	public double minDistance(DoublePoint[] centers, double[] input) {
 		EuclideanDistance d = new EuclideanDistance();
 		double minDistance = Double.POSITIVE_INFINITY;
@@ -116,11 +116,12 @@ public class VQVADModel implements Data {
 	 * @return
 	 */
 	public boolean classify(DoubleData frame, DoubleData mfcc) {
-		double speechMinDistance = minDistance(speechCenters, mfcc.getValues());
-		double nonspeechMinDistance = minDistance(nonspeechCenters, mfcc.getValues());
 
-		double LLR = nonspeechMinDistance - speechMinDistance;
-		double energy = EnergyUtility.computeEnergy(frame);
+		final double speechMinDistance = minDistance(speechCenters, mfcc.getValues());
+		final double nonspeechMinDistance = minDistance(nonspeechCenters, mfcc.getValues());
+
+		final double LLR = nonspeechMinDistance - speechMinDistance;
+		final double energy = EnergyUtility.computeEnergy(frame);
 
 		return LLR >= 0 && energy >= energyMinLevel;
 	}
