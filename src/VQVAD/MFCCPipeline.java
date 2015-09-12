@@ -12,10 +12,30 @@ import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform2;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 
+/**
+ * Generates MFCCPacket objects containing the audio frame before processing,
+ * a vector with MFCC and the de-noised power spectrum of the audio frame to
+ * compute the cleaned energy from.
+ *
+ * As suggested by [1], spectral subtraction is used for de-noising as
+ * implemented in {@link Denoise}.
+ *
+ * All parameters are taken from the reference implementation provided by [1].
+ *
+ * [1]: 'A Practical, Self-Adaptive Voice Activity Detector for Speaker Verification
+ * 		 with Noisy Telephone and Microphone Data' by Tomi Kinnunen and Padmanabhan Rajan
+ */
 public class MFCCPipeline extends BaseDataProcessor {
 
+	/** MFCC filter pipeline including denoising. */
 	final protected FrontEnd frontend;
-	final protected SingleDataBuffer singleDataBuffer, denoisedFrameBuffer;
+
+	/** Buffers incoming unprocessed audio frames to pass down with the processed frames. */
+	final protected SingleDataBuffer singleDataBuffer;
+
+	/** Buffers denoised power spectrum frames to calculate the energy from later. */
+	final protected SingleDataBuffer denoisedFrameBuffer;
+
 
 	public MFCCPipeline(double minFreq, double maxFreq, int numFilters) {
 		final ArrayList<DataProcessor> pipeline = new ArrayList<DataProcessor>();
@@ -33,6 +53,16 @@ public class MFCCPipeline extends BaseDataProcessor {
 		frontend = new FrontEnd(pipeline);
 	}
 
+	/**
+	 * Creates MFCCPacket objects holding the unprocessed audio frame which served
+	 * as basis for the analysis, the denoised MFCC vector and the denoised power
+	 * spectrum of the audio frame.
+	 *
+	 *  The power spectrum is passed down to compute the energy of the frame but
+	 *  taking advantage of the denoising. Since the energy is used for sorting
+	 *  frames in the training process it is mandatory that the energy value is
+	 *  computed on the denoised frame.
+	 */
 	@Override
 	public Data getData() throws DataProcessingException {
 		frontend.setPredecessor(getPredecessor());
@@ -42,20 +72,7 @@ public class MFCCPipeline extends BaseDataProcessor {
 		final Data denoised = denoisedFrameBuffer.getBufferedData();
 
 		if (buffered instanceof DoubleData && processed instanceof DoubleData) {
-			DiscreteFourierTransform idft = new DiscreteFourierTransform(-1, true);
-			BaseDataProcessor supplier = (new BaseDataProcessor() {
-				@Override
-				public Data getData() throws DataProcessingException {
-					return denoised;
-				}
-			});
-			idft.setPredecessor(supplier);
-
-			Data d = idft.getData();
-			DoubleData dd = (DoubleData) denoised;
-			double[] v = dd.getValues();
-			for (int i=0; i < v.length; i++) v[i] = Math.sqrt(v[i]);
-			return new MFCCPacket((DoubleData) buffered, (DoubleData) processed, dd);
+			return new MFCCPacket((DoubleData) buffered, (DoubleData) processed, (DoubleData) denoised);
 		}
 
 		return processed;
