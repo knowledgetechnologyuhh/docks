@@ -1,18 +1,11 @@
 /*
  * Copyright 2015 Marian Tietz
- * Copyright 2013 Carnegie Mellon University.
+ * Portions Copyright 2013 Carnegie Mellon University.
  * All Rights Reserved.  Use is subject to license terms.
- *
- * See the file "license.terms" for information on usage and
- * redistribution of this file, and for a DISCLAIMER OF ALL
- * WARRANTIES.
- *
  */
 package edu.cmu.sphinx.frontend.denoise;
 
 import java.util.Arrays;
-
-import Utils.Debug;
 
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
@@ -22,28 +15,23 @@ import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Double;
-import edu.cmu.sphinx.util.props.S4Integer;
 
 /**
- * The noise filter, same as implemented in sphinxbase/sphinxtrain/pocketsphinx.
  *
- * Noise removal algorithm is inspired by the following papers Computationally
- * Efficient Speech Enchancement by Spectral Minina Tracking by G. Doblinger
+ * Noise tracking is, as Sphinx' original implementation, inspired by [2].
+ * Usage and implementation of spectral subtraction and the parametrization
+ * was taken from [1].
  *
- * Power-Normalized Cepstral Coefficients (PNCC) for Robust Speech Recognition
- * by C. Kim.
+ * [1]: 'A Practical, Self-Adaptive Voice Activity Detector for Speaker Verification
+ * 		 with Noisy Telephone and Microphone Data' by Tomi Kinnunen and Padmanabhan Rajan
  *
- * For the recent research and state of art see papers about IMRCA and A
- * Minimum-Mean-Square-Error Noise Reduction Algorithm On Mel-Frequency Cepstra
- * For Robust Speech Recognition by Dong Yu and others
- *
+ * [2]: 'Computationally Efficient Speech Enchancement by Spectral Minina Tracking'
+ * 		 by G. Doblinger
  */
 public class Denoise extends BaseDataProcessor {
 
-    double[] power;
-    double[] noise;
-    double[] floor;
-    double[] peak;
+    protected double[] power;
+    protected double[] noise;
 
     @S4Double(defaultValue = 0.7)
     public final static String LAMBDA_POWER = "lambdaPower";
@@ -57,28 +45,6 @@ public class Denoise extends BaseDataProcessor {
     public final static String LAMBDA_B = "lambdaB";
     double lambdaB;
 
-    @S4Double(defaultValue = 0.85)
-    public final static String LAMBDA_T = "lambdaT";
-    double lambdaT;
-
-    @S4Double(defaultValue = 0.2)
-    public final static String MU_T = "muT";
-    double muT;
-
-    @S4Double(defaultValue = 2.0)
-    public final static String EXCITATION_THRESHOLD = "excitationThreshold";
-    double excitationThreshold;
-
-    @S4Double(defaultValue = 20.0)
-    public final static String MAX_GAIN = "maxGain";
-    double maxGain;
-
-    @S4Integer(defaultValue = 4)
-    public final static String SMOOTH_WINDOW = "smoothWindow";
-    int smoothWindow;
-
-    final static double EPS = 1e-10;
-
     public Denoise(double lambdaPower, double lambdaA, double lambdaB,
             double lambdaT, double muT, double excitationThreshold,
             double maxGain, int smoothWindow) {
@@ -90,13 +56,6 @@ public class Denoise extends BaseDataProcessor {
     public Denoise() {
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util
-     * .props.PropertySheet)
-     */
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
@@ -134,6 +93,7 @@ public class Denoise extends BaseDataProcessor {
 
         estimateEnvelope(power, noise);
 
+        // Parameters taken from [1].
         double g_h = 1.0;
         double a = 10;
         double b = 0.01;
@@ -166,10 +126,5 @@ public class Denoise extends BaseDataProcessor {
         /* no previous data, initialize the statistics */
         power = Arrays.copyOf(input, length);
         noise = Arrays.copyOf(input, length);
-        floor = new double[length];
-        peak = new double[length];
-        for (int i = 0; i < length; i++) {
-            floor[i] = input[i] / maxGain;
-        }
     }
 }
