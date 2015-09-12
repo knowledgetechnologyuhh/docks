@@ -28,26 +28,18 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
-import Utils.Debug;
 import Utils.Printer;
 import VQVAD.Denoise;
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DataBlocker;
 import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FrontEnd;
-import edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter;
-import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
-import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
-import edu.cmu.sphinx.frontend.endpoint.SpeechMarker;
-import edu.cmu.sphinx.frontend.filter.Dither;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
-import edu.cmu.sphinx.util.props.S4Double;
 
 public class DenoiseTestStream extends AudioInputStream {
 	private final String TAG = "DenoiseTestStream";

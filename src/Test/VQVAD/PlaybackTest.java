@@ -21,22 +21,18 @@ package Test.VQVAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
-import com.sun.media.sound.WaveFileWriter;
-
+import Frontend.VQVoiceActivityDetector;
 import Utils.Player;
 
-import Frontend.VQVoiceActivityDetector;
-import Frontend.VoiceActivityDetector;
+import com.sun.media.sound.WaveFileWriter;
 
 public class PlaybackTest {
 
