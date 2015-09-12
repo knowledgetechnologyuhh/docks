@@ -27,6 +27,7 @@ import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.FrontEnd;
+import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
 import edu.cmu.sphinx.frontend.filter.Dither;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
@@ -36,9 +37,9 @@ import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
  * This class assembles the components of the VQ voice activity detector.
  *
  * It receives an audio input source and outputs audio segments that
- * are marked speech or non-speech.
+ * are marked speech or non-speech represented as {@link SpeechClassifiedData}.
  *
- * Since it is a BaseDataProcessor it can be used in a Sphinx
+ * Since it is a {@link BaseDataProcessor} it can be used in a Sphinx
  * FrontEnd pipeline. Having elements before this one in the pipeline
  * does not work since every output of previous elements is ignored.
  * This was done to ensure that there's only raw audio received by this
@@ -47,15 +48,35 @@ import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
  */
 public class VQVADPipeline extends BaseDataProcessor {
 
+	final static public double DEFAULT_LEARNING_RATE = 0.995;
+
 	protected FrontEnd frontend;
 
 	public VQVADPipeline(AudioFileDataSource src) {
+		this(src, DEFAULT_LEARNING_RATE);
+	}
+
+	/**
+	 * The learning rate determines how a newly trained model is merged
+	 * with the existing one according to:
+	 *
+	 * 	 model_values = lambda * new_model_values + (1-lambda) * old_model_values
+	 *
+	 * That means if the learning rate is 0, no new values are applied and
+	 * the model is unchanged. If the learning rate is 1, the new model replaces
+	 * the old model. Intermediate values merge the values of both models.
+	 *
+	 * To disable training, set the learning rate to 0.
+	 *
+	 * @param src
+	 * @param learningRate
+	 */
+	public VQVADPipeline(AudioFileDataSource src, double learning_rate) {
 		ArrayList<DataProcessor> pipeline = new ArrayList<DataProcessor>();
 
 		float frame_length_ms = 30;
 		float frame_shift_ms = 10;
 		double lower_freq = 0;
-		double learning_rate = 0.995;
 
 		pipeline.add(src);
 		pipeline.add(new Dither());
