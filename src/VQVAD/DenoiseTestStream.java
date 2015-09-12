@@ -17,7 +17,7 @@
  * Contact:
  * vqvad@nemo.ikkoku.de
  */
-package Frontend;
+package VQVAD;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,11 +30,6 @@ import javax.sound.sampled.AudioInputStream;
 
 import Utils.Debug;
 import Utils.Printer;
-import VQVAD.Denoise;
-import VQVAD.FrameOverlapFilter;
-import VQVAD.MFCCPacket;
-import VQVAD.MFCCPipeline;
-import VQVAD.VQVADPipeline;
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DataBlocker;
@@ -53,8 +48,8 @@ import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
 import edu.cmu.sphinx.util.props.S4Double;
 
-public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
-	private final String TAG="VQVoiceActivityDetector";
+public class DenoiseTestStream extends AudioInputStream {
+	private final String TAG = "DenoiseTestStream";
 	private final FrontEnd frontend;
 
 	protected float sampleRate = 8000;
@@ -66,8 +61,7 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 		int channels = 1;
 		boolean signed = true;
 		boolean bigEndian = false;
-		AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
-				channels, signed, bigEndian);
+		AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 		return format;
 	}
 
@@ -80,7 +74,7 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 	 * @param AisName name of the microphone LocalMicrophone or SocketMicrophone
 	 * @throws MalformedURLException
 	 */
-	public DenoiseTestVQVoiceActivityDetector(URL path, float sampleRate, String AisName) throws MalformedURLException {
+	public DenoiseTestStream(URL path, float sampleRate, String AisName) throws MalformedURLException {
 		super(null,new AudioFormat(sampleRate, 16,	1, true, false), 0);
 
 		this.sampleRate = sampleRate;
@@ -92,7 +86,7 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 		frontend = setupFrontend(audioDataSource);
 	}
 
-	public DenoiseTestVQVoiceActivityDetector(AudioInputStream ais, String AisName) {
+	public DenoiseTestStream(AudioInputStream ais, String AisName) {
 		super(null,new AudioFormat(ais.getFormat().getSampleRate(), 16,	1, true, false), 0);
 
 		this.sampleRate = ais.getFormat().getSampleRate();
@@ -104,7 +98,7 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 		frontend = setupFrontend(audioDataSource);
 	}
 
-	public DenoiseTestVQVoiceActivityDetector(AudioFileDataSource audioDataSource, String AisName) {
+	public DenoiseTestStream(AudioFileDataSource audioDataSource, String AisName) {
 		super(null,new AudioFormat(audioDataSource.getSampleRate(), 16,	1, true, false), 0);
 
 		frontend = setupFrontend(audioDataSource);
@@ -115,12 +109,9 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 
 		float frame_length_ms = 30;
 		float frame_shift_ms = 10;
-		double lower_freq = 0;
-		double learning_rate = 0.995;
 
 		pipeline.add(audioDataSource);
-		//pipeline.add(new DataBlocker(10));
-		pipeline.add(new RaisedCosineWindower(0, 30, 10));
+		pipeline.add(new RaisedCosineWindower(0, frame_length_ms, frame_shift_ms));
 		pipeline.add(new DiscreteFourierTransform(-1, false));
 		pipeline.add(new Denoise(0.7, 0.995, 0.5));
 		pipeline.add(new BaseDataProcessor() {
@@ -153,21 +144,6 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 			}
 		});
 
-
-//		pipeline.add(new FrameOverlapFilter(30,10));
-
-//		pipeline.add(new FrameOverlapFilter(frame_length_ms, frame_shift_ms));
-
-
-
-//		// VQVAD pipeline
-//		pipeline.add(new VQVADPipeline(audioDataSource));
-//		//marks as speech
-//		//pipeline.add(new SpeechMarker(100, 300, 100));
-//		pipeline.add(new SpeechMarker(100, 300, 100, 30, 100, 15.0));
-//		//removes non speech
-//		pipeline.add(new NonSpeechDataFilter());
-
 		return new FrontEnd(pipeline);
 	}
 
@@ -175,9 +151,6 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 	public int read(byte[] buf, int off, int len) {
 		Printer.printWithTimeF(TAG, "reading");
 		Data d=null;
-
-		//System.out.println(buf.length);
-		//if (len == 0) return -1;
 
 		//if still in speech get data from frontend
 		if(!speechEnd)
@@ -197,14 +170,9 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 			i++;
 
 			//check if data is DoubleData which means audio data
-			//if (d instanceof SpeechClassifiedData) {
 			if (d instanceof DoubleData) {
-			//if (d instanceof MFCCPacket) {
-
 				//convert frame data back to raw data
-				//DoubleData dd = ((SpeechClassifiedData) d).getDoubleData();
 				DoubleData dd = (DoubleData) d;
-				//DoubleData dd = ((MFCCPacket) d).getAudioFrame();
 				double[] values = dd.getValues();
 				if (framesize == -1)
 					framesize = values.length * 2;
@@ -237,13 +205,8 @@ public class DenoiseTestVQVoiceActivityDetector extends AudioInputStream {
 			}
 		}
 
-//		System.out.println("baos length: " + baos.size());
-//		System.out.println("offset: " + off + " buf length: " + len);
-
 		// write the converted data to the output buffer
 		System.arraycopy(baos.toByteArray(), 0, buf, 0, baos.size());
-
-		// TODO Auto-generated method stub
 		return baos.size();
 	}
 }
