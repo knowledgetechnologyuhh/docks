@@ -17,7 +17,7 @@
  * Contact:
  * vqvad@nemo.ikkoku.de
  */
-package VQVAD;
+package Test.VQVAD;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import javax.sound.sampled.AudioInputStream;
 
 import Utils.Debug;
 import Utils.Printer;
+import VQVAD.Denoise;
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DataBlocker;

@@ -1,9 +1,11 @@
-package VQVAD;
+package Test.VQVAD;
 
 import static org.junit.Assert.*;
 
 import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.junit.Test;
+
+import VQVAD.VQVADModel;
 
 public class VQVADModelTest {
 

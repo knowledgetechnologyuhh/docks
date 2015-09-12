@@ -1,8 +1,10 @@
-package VQVAD;
+package Test.VQVAD;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import VQVAD.VQVADTrainer;
 
 public class VQVADTrainerTest {
 

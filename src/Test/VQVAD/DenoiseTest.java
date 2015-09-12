@@ -17,14 +17,12 @@
  * Contact:
  * vqvad@nemo.ikkoku.de
  */
-package VQVAD;
+package Test.VQVAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -33,13 +31,7 @@ import javax.sound.sampled.AudioInputStream;
 
 import com.sun.media.sound.WaveFileWriter;
 
-import Utils.Player;
-
-import Frontend.DenoiseTestVQVoiceActivityDetector;
-import Frontend.VQVoiceActivityDetector;
-import Frontend.VoiceActivityDetector;
-
-public class PlaybackTest {
+public class DenoiseTest {
 
 	private static AudioInputStream copyAis(AudioInputStream source, AudioFormat format) {
 		boolean run = true;
@@ -78,29 +70,24 @@ public class PlaybackTest {
 
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/foo.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noise_only.wav");
-
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/clean/sp12.wav");
-		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_10dB/sp12_train_sn10.wav");
+		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_10dB/sp12_train_sn10.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/train_5dB/sp12_train_sn5.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/noizeus_train/car_10dB/sp12_car_sn10.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_then_noise_only.wav");
 		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise.wav");
-		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
+		//URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
 
-		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
-		//DenoiseTestVQVoiceActivityDetector vac = new DenoiseTestVQVoiceActivityDetector(path, 8000, "foo");
-		//VoiceActivityDetector vac = new VoiceActivityDetector(path, 8000, "foo");
-
-		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
+		// Write filtered sound to WAV file.
+		DenoiseTestStream stream = new DenoiseTestStream(path, 8000, "denoiseTestStream");
+		AudioInputStream debugAis = copyAis(stream, stream.getFormat());
 
 		WaveFileWriter w = new WaveFileWriter();
 		FileOutputStream of = new FileOutputStream("/home/nemo/Documents/Studium/Master/study/test_out.wav");
-
 		w.write(debugAis, AudioFileFormat.Type.WAVE, of);
 		of.close();
-		debugAis.reset();
 
-		Player.playStream(debugAis);
+		// We can now analyze the output file with tools such as audacity or sonic-visualizer.
 	}
 
 }

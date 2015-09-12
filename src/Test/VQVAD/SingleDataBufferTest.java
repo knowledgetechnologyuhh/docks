@@ -1,8 +1,10 @@
-package VQVAD;
+package Test.VQVAD;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import VQVAD.SingleDataBuffer;
 
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;

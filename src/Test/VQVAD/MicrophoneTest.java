@@ -17,7 +17,7 @@
  * Contact:
  * vqvad@nemo.ikkoku.de
  */
-package VQVAD;
+package Test.VQVAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

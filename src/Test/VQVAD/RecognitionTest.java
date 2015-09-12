@@ -17,7 +17,7 @@
  * Contact:
  * vqvad@nemo.ikkoku.de
  */
-package VQVAD;
+package Test.VQVAD;
 
 import java.net.MalformedURLException;
 import java.net.URL;
