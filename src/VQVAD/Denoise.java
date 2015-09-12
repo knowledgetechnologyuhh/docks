@@ -3,7 +3,7 @@
  * Portions Copyright 2013 Carnegie Mellon University.
  * All Rights Reserved.  Use is subject to license terms.
  */
-package edu.cmu.sphinx.frontend.denoise;
+package VQVAD;
 
 import java.util.Arrays;
 
@@ -45,9 +45,7 @@ public class Denoise extends BaseDataProcessor {
     public final static String LAMBDA_B = "lambdaB";
     double lambdaB;
 
-    public Denoise(double lambdaPower, double lambdaA, double lambdaB,
-            double lambdaT, double muT, double excitationThreshold,
-            double maxGain, int smoothWindow) {
+    public Denoise(double lambdaPower, double lambdaA, double lambdaB) {
         this.lambdaPower = lambdaPower;
         this.lambdaA = lambdaA;
         this.lambdaB = lambdaB;
