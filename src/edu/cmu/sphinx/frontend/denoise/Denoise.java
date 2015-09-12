@@ -1,4 +1,5 @@
 /*
+ * Copyright 2015 Marian Tietz
  * Copyright 2013 Carnegie Mellon University.
  * All Rights Reserved.  Use is subject to license terms.
  *
@@ -10,6 +11,8 @@
 package edu.cmu.sphinx.frontend.denoise;
 
 import java.util.Arrays;
+
+import Utils.Debug;
 
 import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
@@ -82,11 +85,6 @@ public class Denoise extends BaseDataProcessor {
         this.lambdaPower = lambdaPower;
         this.lambdaA = lambdaA;
         this.lambdaB = lambdaB;
-        this.lambdaT = lambdaT;
-        this.muT = muT;
-        this.excitationThreshold = excitationThreshold;
-        this.maxGain = maxGain;
-        this.smoothWindow = smoothWindow;
     }
 
     public Denoise() {
@@ -105,11 +103,6 @@ public class Denoise extends BaseDataProcessor {
         lambdaPower = ps.getDouble(LAMBDA_POWER);
         lambdaA = ps.getDouble(LAMBDA_A);
         lambdaB = ps.getDouble(LAMBDA_B);
-        lambdaT = ps.getDouble(LAMBDA_T);
-        muT = ps.getDouble(MU_T);
-        excitationThreshold = ps.getDouble(EXCITATION_THRESHOLD);
-        maxGain = ps.getDouble(MAX_GAIN);
-        smoothWindow = ps.getInt(SMOOTH_WINDOW);
     }
 
     @Override
@@ -120,8 +113,6 @@ public class Denoise extends BaseDataProcessor {
         if (inputData instanceof DataStartSignal) {
             power = null;
             noise = null;
-            floor = null;
-            peak = null;
             return inputData;
         }
         if (!(inputData instanceof DoubleData)) {
@@ -135,69 +126,25 @@ public class Denoise extends BaseDataProcessor {
         if (power == null)
             initStatistics(input, length);
 
+        // input is the power spectrum of the frame computed by the DiscreteFourierTransform component.
+        // power is the short time power spectrum.
+        // noise is the short time noise power spectrum estimate.
+
         updatePower(input);
 
         estimateEnvelope(power, noise);
 
-        double[] signal = new double[length];
-        for (i = 0; i < length; i++) {
-            signal[i] = Math.max(power[i] - noise[i], 0.0);
-        }
-
-        estimateEnvelope(signal, floor);
-
-        tempMasking(signal);
-
-        powerBoosting(signal);
-
-        double[] gain = new double[length];
-        for (i = 0; i < length; i++) {
-            gain[i] = signal[i] / (power[i] + EPS);
-            gain[i] = Math.min(Math.max(gain[i], 1.0 / maxGain), maxGain);
-        }
-        double[] smoothGain = smooth(gain);
+        double g_h = 1.0;
+        double a = 10;
+        double b = 0.01;
 
         for (i = 0; i < length; i++) {
-            input[i] *= smoothGain[i];
+	        double bf = Math.min(g_h, b * noise[i] / power[i]); // noise floor gain
+	        double af = 1 - a * (noise[i] / power[i]); // subtraction gain
+	        input[i] *= Math.max(af, bf);
         }
 
         return inputData;
-    }
-
-    private double[] smooth(double[] gain) {
-        double[] result = new double[gain.length];
-        for (int i = 0; i < gain.length; i++) {
-            int start = Math.max(i - smoothWindow, 0);
-            int end = Math.min(i + smoothWindow + 1, gain.length);
-            double sum = 0.0;
-            for (int j = start; j < end; j++) {
-                sum += gain[j];
-            }
-            result[i] = sum / (end - start);
-        }
-        return result;
-    }
-
-    private void powerBoosting(double[] signal) {
-        for (int i = 0; i < signal.length; i++) {
-            if (signal[i] < floor[i])
-                signal[i] = floor[i];
-            if (signal[i] < excitationThreshold * noise[i])
-                signal[i] = floor[i];
-        }
-    }
-
-    private void tempMasking(double[] signal) {
-        for (int i = 0; i < signal.length; i++) {
-            double in = signal[i];
-
-            peak[i] *= lambdaT;
-            if (signal[i] < lambdaT * peak[i])
-                signal[i] = peak[i] * muT;
-
-            if (in > peak[i])
-                peak[i] = in;
-        }
     }
 
     private void updatePower(double[] input) {
