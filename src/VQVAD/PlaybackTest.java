@@ -35,6 +35,7 @@ import com.sun.media.sound.WaveFileWriter;
 
 import Utils.Player;
 
+import Frontend.DenoiseTestVQVoiceActivityDetector;
 import Frontend.VQVoiceActivityDetector;
 import Frontend.VoiceActivityDetector;
 
@@ -87,6 +88,7 @@ public class PlaybackTest {
 		URL path = new URL("file:///home/nemo/Documents/Studium/Master/study/code/VQVAD/trainset/sp12_train_sn10_preceeding_noise_sp12_train_sn10_again.wav");
 
 		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(path, 8000, "foo");
+		//DenoiseTestVQVoiceActivityDetector vac = new DenoiseTestVQVoiceActivityDetector(path, 8000, "foo");
 		//VoiceActivityDetector vac = new VoiceActivityDetector(path, 8000, "foo");
 
 		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
