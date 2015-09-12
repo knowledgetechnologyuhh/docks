@@ -15,16 +15,18 @@ import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 public class MFCCPipeline extends BaseDataProcessor {
 
 	final protected FrontEnd frontend;
-	protected SingleDataBuffer singleDataBuffer;
+	final protected SingleDataBuffer singleDataBuffer, denoisedFrameBuffer;
 
 	public MFCCPipeline(double minFreq, double maxFreq, int numFilters) {
 		final ArrayList<DataProcessor> pipeline = new ArrayList<DataProcessor>();
 
 		singleDataBuffer = new SingleDataBuffer();
+		denoisedFrameBuffer = new SingleDataBuffer();
 
 		pipeline.add(singleDataBuffer);
 		pipeline.add(new DiscreteFourierTransform());
 		pipeline.add(new Denoise(0.7, 0.995, 0.5));
+		pipeline.add(denoisedFrameBuffer);
 		pipeline.add(new MelFrequencyFilterBank(minFreq, maxFreq, numFilters));
 		pipeline.add(new DiscreteCosineTransform2(numFilters, 12));
 
@@ -35,11 +37,25 @@ public class MFCCPipeline extends BaseDataProcessor {
 	public Data getData() throws DataProcessingException {
 		frontend.setPredecessor(getPredecessor());
 
-		Data buffered = singleDataBuffer.getBufferedData();
-		Data processed = frontend.getData();
+		final Data buffered = singleDataBuffer.getBufferedData();
+		final Data processed = frontend.getData();
+		final Data denoised = denoisedFrameBuffer.getBufferedData();
 
 		if (buffered instanceof DoubleData && processed instanceof DoubleData) {
-			return new MFCCPacket((DoubleData) buffered, (DoubleData) processed);
+			DiscreteFourierTransform idft = new DiscreteFourierTransform(-1, true);
+			BaseDataProcessor supplier = (new BaseDataProcessor() {
+				@Override
+				public Data getData() throws DataProcessingException {
+					return denoised;
+				}
+			});
+			idft.setPredecessor(supplier);
+
+			Data d = idft.getData();
+			DoubleData dd = (DoubleData) denoised;
+			double[] v = dd.getValues();
+			for (int i=0; i < v.length; i++) v[i] = Math.sqrt(v[i]);
+			return new MFCCPacket((DoubleData) buffered, (DoubleData) processed, dd);
 		}
 
 		return processed;

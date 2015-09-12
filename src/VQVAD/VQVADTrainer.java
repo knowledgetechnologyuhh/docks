@@ -85,7 +85,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 	final static int DEFAULT_FRAME_BUFFER_SIZE = 800;
 
 	/** The default minimum number of frames that are needed for training */
-	final static int DEFAULT_MIN_FRAME_NUMBER = 200;
+	final static int DEFAULT_MIN_FRAME_NUMBER = 400;
 
 	/** Default maximum number of k-means iterations */
 	final static int DEFAULT_KMEANS_MAX_ITER = 20;
@@ -195,7 +195,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 			for (int i=0; i < trainingFrameBuffer.size(); i++) {
 				final MFCCPacket packet = (MFCCPacket) packets[i];
 
-				frames[i] = packet.getAudioFrame();
+				frames[i] = packet.getDenoisedAudioFrame();
 				mfccs[i] = packet.getMFCC();
 			}
 

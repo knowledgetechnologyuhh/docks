@@ -34,14 +34,20 @@ public class MFCCPacket implements Data {
 
 	protected final DoubleData audio;
 	protected final DoubleData mfcc;
+	protected final DoubleData denoisedAudio;
 
-	public MFCCPacket(DoubleData audio, DoubleData mfcc) {
+	public MFCCPacket(DoubleData audio, DoubleData mfcc, DoubleData denoisedAudio) {
 		this.audio = audio;
 		this.mfcc = mfcc;
+		this.denoisedAudio = denoisedAudio;
 	}
 
 	public DoubleData getAudioFrame() {
 		return audio;
+	}
+
+	public DoubleData getDenoisedAudioFrame() {
+		return denoisedAudio;
 	}
 
 	public DoubleData getMFCC() {
