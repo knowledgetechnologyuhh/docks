@@ -29,14 +29,17 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 import Utils.Printer;
+import VQVAD.SpeechEndMarker;
 import VQVAD.VQVADPipeline;
 import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FrontEnd;
 import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
 import edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter;
 import edu.cmu.sphinx.frontend.endpoint.SpeechMarker;
+import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;;
 
 public class VQVoiceActivityDetector extends AudioInputStream {
@@ -59,6 +62,9 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 
 	private int i = 0;
 	private boolean speechEnd = false;
+
+	boolean started = false;
+
 
 	/**
 	 * Creates a new voice activity detector
@@ -100,10 +106,13 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 		ArrayList<DataProcessor> pipeline = new ArrayList<DataProcessor>();
 		// VQVAD pipeline
 		pipeline.add(new VQVADPipeline(audioDataSource));
-		//marks as speech
-		pipeline.add(new SpeechMarker(200, 300, 100, 30, 100, 15.0));
-		//removes non speech
-		pipeline.add(new NonSpeechDataFilter());
+
+		pipeline.add(new SpeechEndMarker());
+
+//		//marks as speech
+//		pipeline.add(new SpeechMarker(200, 300, 100, 30, 100, 15.0));
+//		//removes non speech
+//		pipeline.add(new NonSpeechDataFilter());
 
 		return new FrontEnd(pipeline);
 	}
@@ -128,14 +137,20 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 		DataOutputStream dos = new DataOutputStream(baos);
 		int framesize = -1;
 
+
+		Printer.logLevel = Printer.FINE;
+
 		//do this while data from frontend is not null
 		while (d != null) {
 			Printer.printWithTimeF(TAG, d.getClass().getName()+" "+i);
 			i++;
 
-			//check if data is DoubleData which means audio data
-			if (d instanceof DoubleData) {
+			if (!started && d instanceof SpeechStartSignal) {
+				started = true;
+			}
 
+			//check if data is DoubleData which means audio data
+			if (started && d instanceof DoubleData) {
 				//convert frame data back to raw data
 				DoubleData dd = (DoubleData) d;
 				double[] values = dd.getValues();
@@ -159,8 +174,11 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 				} else {
 					d = null;
 				}
-			} else if(d instanceof SpeechEndSignal) {
+			} else if(started && d instanceof SpeechEndSignal) {
 				//stopp pulling if end of speech is reached
+				speechEnd = true;
+				break;
+			} else if (d instanceof DataEndSignal) {
 				speechEnd = true;
 				break;
 			} else {
