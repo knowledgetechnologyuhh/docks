@@ -60,8 +60,7 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 
 	private int i = 0;
 	private boolean speechEnd = false;
-
-	boolean started = false;
+	protected boolean speechStarted = false;
 
 
 	/**
@@ -116,12 +115,8 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 		Printer.printWithTimeF(TAG, "reading");
 		Data d=null;
 
-		System.out.println(buf.length);
-		//if (len == 0) return -1;
-
 		//if still in speech get data from frontend
-		if(!speechEnd)
-		{
+		if(!speechEnd) {
 			d = frontend.getData();
 		} else {
 			speechEnd = false;
@@ -131,20 +126,17 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 		DataOutputStream dos = new DataOutputStream(baos);
 		int framesize = -1;
 
-
-		Printer.logLevel = Printer.FINE;
-
 		//do this while data from frontend is not null
 		while (d != null) {
 			Printer.printWithTimeF(TAG, d.getClass().getName()+" "+i);
 			i++;
 
-			if (!started && d instanceof SpeechStartSignal) {
-				started = true;
+			if (!speechStarted && d instanceof SpeechStartSignal) {
+				speechStarted = true;
 			}
 
 			//check if data is DoubleData which means audio data
-			if (started && d instanceof DoubleData) {
+			if (speechStarted && d instanceof DoubleData) {
 				//convert frame data back to raw data
 				DoubleData dd = (DoubleData) d;
 				double[] values = dd.getValues();
@@ -168,7 +160,7 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 				} else {
 					d = null;
 				}
-			} else if(started && d instanceof SpeechEndSignal) {
+			} else if(speechStarted && d instanceof SpeechEndSignal) {
 				//stopp pulling if end of speech is reached
 				speechEnd = true;
 				break;
