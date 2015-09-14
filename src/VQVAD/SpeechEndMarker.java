@@ -50,8 +50,6 @@ public class SpeechEndMarker extends BaseDataProcessor {
 		double currentSilenceMs = (double) nonspeechFrameCount * sd.getDoubleData().dimension() / sd.getSampleRate() * 1000;
 		double currentSpeechMs = (double) speechFrameCount * sd.getDoubleData().dimension() / sd.getSampleRate() * 1000;
 
-		System.out.println(currentSilenceMs + "," + currentSpeechMs);
-
 		if (currentSilenceMs >= silenceInMs) {
 			started = false;
 			return new SpeechEndSignal();
@@ -62,8 +60,6 @@ public class SpeechEndMarker extends BaseDataProcessor {
 		}
 
 		if (currentSpeechMs >= speechInMs) {
-			System.out.println("whut");
-
 			started = true;
 			return new SpeechStartSignal();
 		}

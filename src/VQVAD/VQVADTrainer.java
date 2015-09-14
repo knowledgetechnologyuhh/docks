@@ -288,7 +288,7 @@ public class VQVADTrainer extends BaseDataProcessor {
 		final DoublePoint[] speech_centroids	= trainCodebook(speech_mfcc);
 		final DoublePoint[] nonspeech_centroids = trainCodebook(nonspeech_mfcc);
 
-		dumpCentroids(speech_centroids, nonspeech_centroids);
+		// dumpCentroids(speech_centroids, nonspeech_centroids);
 
 		return new VQVADModel(speech_centroids, nonspeech_centroids, energyMinLevel);
 	}
