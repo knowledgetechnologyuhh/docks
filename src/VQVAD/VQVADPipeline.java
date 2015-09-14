@@ -48,7 +48,7 @@ import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
  */
 public class VQVADPipeline extends BaseDataProcessor {
 
-	final static public double DEFAULT_LEARNING_RATE = 0.995;
+	final static public double DEFAULT_LEARNING_RATE = 0.05;
 
 	protected FrontEnd frontend;
 
