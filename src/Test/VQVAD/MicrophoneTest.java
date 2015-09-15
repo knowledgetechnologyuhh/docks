@@ -70,9 +70,10 @@ public class MicrophoneTest {
 		VQVoiceActivityDetector vac = new VQVoiceActivityDetector(new LocalMicrophone(), "foo");
 		//VoiceActivityDetector vac = new VoiceActivityDetector(new LocalMicrophone(), "foo");
 
-		AudioInputStream debugAis = copyAis(vac, vac.getFormat());
-
-		Player.playStream(debugAis);
+		while (true) {
+			AudioInputStream debugAis = copyAis(vac, vac.getFormat());
+			Player.playStream(debugAis);
+		}
 	}
 
 }
