@@ -163,9 +163,11 @@ public class VQVoiceActivityDetector extends AudioInputStream {
 			} else if(speechStarted && d instanceof SpeechEndSignal) {
 				//stopp pulling if end of speech is reached
 				speechEnd = true;
+				speechStarted = false;
 				break;
 			} else if (d instanceof DataEndSignal) {
 				speechEnd = true;
+				speechStarted = false;
 				break;
 			} else {
 				//get data from frontend if data is not yet containing audio data or an end signal
