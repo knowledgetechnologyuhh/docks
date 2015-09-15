@@ -18,7 +18,9 @@ import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
  */
 public class GapSmoothing extends BaseDataProcessor {
 
-	protected int gapWidthInFrames = 10;
+	public final static int DEFAULT_GAP_WIDTH_IN_FRAMES = 10;
+
+	protected int gapWidthInFrames = DEFAULT_GAP_WIDTH_IN_FRAMES;
 	protected CircularFifoBuffer frameBuffer;
 
 	@SuppressWarnings("serial")
@@ -27,8 +29,13 @@ public class GapSmoothing extends BaseDataProcessor {
 	protected boolean dataEndSeen = false;
 	protected DataEndSignal des = null;
 
-	public GapSmoothing() {
+	public GapSmoothing(int gapWidthInFrames) {
+		this.gapWidthInFrames = gapWidthInFrames;
 		frameBuffer = new CircularFifoBuffer(gapWidthInFrames+1);
+	}
+
+	public GapSmoothing() {
+		this(DEFAULT_GAP_WIDTH_IN_FRAMES);
 	}
 
 	@Override
