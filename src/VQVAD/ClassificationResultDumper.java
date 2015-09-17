@@ -26,8 +26,8 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 	protected String resultDestinationPath;
 
 	protected final String audioFilePath;
-	protected final float frameLength;
-	protected final float frameShift;
+	protected final float frameLengthMs;
+	protected final float frameShiftMs;
 	protected final boolean writeMetaData;
 
 	/**
@@ -36,8 +36,8 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 	 * The file will contain two lines. The first is the meta data in matlab parsable format (using eval).
 	 * The second line consists of _ (nonspeech) and O (speech) per frame.
 	 */
-	public ClassificationResultDumper(String audioFilePath, float frameLength, float frameShift, String path) {
-		this(audioFilePath, frameLength, frameShift, path, true);
+	public ClassificationResultDumper(String audioFilePath, float frameLengthMs, float frameShiftMs, String path) {
+		this(audioFilePath, frameLengthMs, frameShiftMs, path, true);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 		this("", 0, 0, path, false);
 	}
 
-	protected ClassificationResultDumper(String audioFilePath, float frameLength, float frameShift, String path, boolean writeMetaData) {
+	protected ClassificationResultDumper(String audioFilePath, float frameLengthMs, float frameShiftMs, String path, boolean writeMetaData) {
 		try {
 			enableResultWriting(path);
 		} catch (FileNotFoundException e) {
@@ -59,8 +59,8 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 		}
 
 		this.audioFilePath = audioFilePath;
-		this.frameLength = frameLength;
-		this.frameShift = frameShift;
+		this.frameLengthMs = frameLengthMs;
+		this.frameShiftMs = frameShiftMs;
 
 		this.writeMetaData = writeMetaData;
 	}
@@ -83,8 +83,8 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 
 		if (d instanceof DataStartSignal) {
 			if (dumpClassificationResult) {
-				System.out.println("input_filename = '" + audioFilePath + "'; frame_length = " + frameLength + "; frame_shift = " + frameShift + ";");
-				resultWriter.println("input_filename = '" + audioFilePath + "'; frame_length = " + frameLength + "; frame_shift = " + frameShift + ";");
+				System.out.println("input_filename = '" + audioFilePath + "'; frame_length_ms = " + frameLengthMs + "; frame_shift_ms = " + frameShiftMs + ";");
+				resultWriter.println("input_filename = '" + audioFilePath + "'; frame_length_ms = " + frameLengthMs + "; frame_shift_ms = " + frameShiftMs + ";");
 			}
 		} else if (d instanceof SpeechClassifiedData) {
 			SpeechClassifiedData sd = (SpeechClassifiedData) d;
