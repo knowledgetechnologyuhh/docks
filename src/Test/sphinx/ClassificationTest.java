@@ -40,7 +40,7 @@ public class ClassificationTest {
 		//classifies speech frames
 		pipeline.add(new SpeechClassifier(10, 0.015, 10, 0));
 		pipeline.add(new GapSmoothing(20));
-		pipeline.add(new ClassificationResultDumper("/tmp/vqvad_classification_result"));
+		pipeline.add(new ClassificationResultDumper(path.getFile(), 10, 10, "/tmp/vqvad_classification_result"));
 
 		FrontEnd frontend = new FrontEnd(pipeline);
 		Data d;

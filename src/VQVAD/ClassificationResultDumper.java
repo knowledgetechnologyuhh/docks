@@ -8,6 +8,7 @@ import edu.cmu.sphinx.frontend.BaseDataProcessor;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DataEndSignal;
 import edu.cmu.sphinx.frontend.DataProcessingException;
+import edu.cmu.sphinx.frontend.DataStartSignal;
 import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
 
 /**
@@ -24,7 +25,11 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 	protected PrintWriter resultWriter;
 	protected String resultDestinationPath;
 
-	public ClassificationResultDumper(String path) {
+	protected final String audioFilePath;
+	protected final float frameLength;
+	protected final float frameShift;
+
+	public ClassificationResultDumper(String audioFilePath, float frameLength, float frameShift, String path) {
 		try {
 			enableResultWriting(path);
 		} catch (FileNotFoundException e) {
@@ -32,6 +37,10 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Programming error: UTF-8 encoding is not supported by environment. Original message: " + e.getMessage());
 		}
+
+		this.audioFilePath = audioFilePath;
+		this.frameLength = frameLength;
+		this.frameShift = frameShift;
 	}
 
 	public void enableResultWriting(String path) throws FileNotFoundException, UnsupportedEncodingException {
@@ -50,7 +59,12 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 	public Data getData() throws DataProcessingException {
 		Data d = getPredecessor().getData();
 
-		if (d instanceof SpeechClassifiedData) {
+		if (d instanceof DataStartSignal) {
+			if (dumpClassificationResult) {
+				System.out.println("input_filename = '" + audioFilePath + "'; frame_length = " + frameLength + "; frame_shift = " + frameShift + ";");
+				resultWriter.println("input_filename = '" + audioFilePath + "'; frame_length = " + frameLength + "; frame_shift = " + frameShift + ";");
+			}
+		} else if (d instanceof SpeechClassifiedData) {
 			SpeechClassifiedData sd = (SpeechClassifiedData) d;
 
 			if (dumpClassificationResult) {

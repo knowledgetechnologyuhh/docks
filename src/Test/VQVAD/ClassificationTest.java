@@ -60,7 +60,7 @@ public class ClassificationTest {
 		audioDataSource.setAudioFile(path, "in");
 		ArrayList<DataProcessor> pipeline = new ArrayList<DataProcessor>();
 		pipeline.add(new VQVADPipeline(audioDataSource));
-		pipeline.add(new ClassificationResultDumper("/tmp/vqvad_classification_result"));
+		pipeline.add(new ClassificationResultDumper(path.getFile(), 30, 10, "/tmp/vqvad_classification_result"));
 
 		FrontEnd frontend = new FrontEnd(pipeline);
 		Data d;
