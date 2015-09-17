@@ -28,8 +28,28 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 	protected final String audioFilePath;
 	protected final float frameLength;
 	protected final float frameShift;
+	protected final boolean writeMetaData;
 
+	/**
+	 * Dump the classification results along with the specified meta data to the specified file.
+	 *
+	 * The file will contain two lines. The first is the meta data in matlab parsable format (using eval).
+	 * The second line consists of _ (nonspeech) and O (speech) per frame.
+	 */
 	public ClassificationResultDumper(String audioFilePath, float frameLength, float frameShift, String path) {
+		this(audioFilePath, frameLength, frameShift, path, true);
+	}
+
+	/**
+	 * Just dump the classification results to the specified file.
+	 *
+	 * The file will contain one line consisting of _ (nonspeech) and O (speech) per frame.
+	 */
+	public ClassificationResultDumper(String path) {
+		this("", 0, 0, path, false);
+	}
+
+	protected ClassificationResultDumper(String audioFilePath, float frameLength, float frameShift, String path, boolean writeMetaData) {
 		try {
 			enableResultWriting(path);
 		} catch (FileNotFoundException e) {
@@ -41,6 +61,8 @@ public class ClassificationResultDumper extends BaseDataProcessor {
 		this.audioFilePath = audioFilePath;
 		this.frameLength = frameLength;
 		this.frameShift = frameShift;
+
+		this.writeMetaData = writeMetaData;
 	}
 
 	public void enableResultWriting(String path) throws FileNotFoundException, UnsupportedEncodingException {
