@@ -51,6 +51,8 @@ public class VQVADPipeline extends BaseDataProcessor {
 	final static public double DEFAULT_LEARNING_RATE = 0.05;
 
 	protected FrontEnd frontend;
+	protected VQVADTrainer trainer;
+	protected VQVADModel currentModel;
 
 	public VQVADPipeline(AudioFileDataSource src) {
 		this(src, DEFAULT_LEARNING_RATE);
@@ -78,16 +80,29 @@ public class VQVADPipeline extends BaseDataProcessor {
 		float frame_shift_ms = 10;
 		double lower_freq = 0;
 
+		trainer = new VQVADTrainer();
+
 		pipeline.add(src);
 		pipeline.add(new Dither());
 		pipeline.add(new RaisedCosineWindower(0, frame_length_ms, frame_shift_ms));
 		pipeline.add(new MFCCPipeline(lower_freq, src.getSampleRate()/2, 27));
-		pipeline.add(new VQVADTrainer());
+		pipeline.add(trainer);
 		pipeline.add(new VQVADClassifier(learning_rate));
 		pipeline.add(new FrameOverlapFilter(frame_length_ms, frame_shift_ms));
 		pipeline.add(new GapSmoothing(12));
 
 		frontend = new FrontEnd(pipeline);
+	}
+
+	public void setStartingModel(VQVADModel model) {
+		trainer.setDefaultModel(model);
+	}
+
+	public VQVADModel getCurrentModel() {
+		if (currentModel == null) {
+			return trainer.getDefaultModel();
+		}
+		return currentModel;
 	}
 
 
@@ -108,6 +123,10 @@ public class VQVADPipeline extends BaseDataProcessor {
 		// FIXME: This is fixed in Sphinx4 0.5-prealpha but porting DOCKS involves some more work.
 		if (d == null) {
 			return new DataEndSignal(42);
+		}
+
+		if (d instanceof VQVADModel) {
+			currentModel = (VQVADModel) d;
 		}
 
 		return d;

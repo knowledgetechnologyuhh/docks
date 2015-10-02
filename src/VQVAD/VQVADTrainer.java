@@ -122,6 +122,9 @@ public class VQVADTrainer extends BaseDataProcessor {
 	/** Minimum number of frames that are needed to start training */
 	protected int minFrameCount = DEFAULT_MIN_FRAME_NUMBER;
 
+	/** Model to use if no model is trained yet. If no model is set from the outside a default one will be loaded. */
+	protected VQVADModel defaultModel;
+
 
 	/**
 	 * Create a trainer with default values. Should work fine for most cases.
@@ -342,11 +345,23 @@ public class VQVADTrainer extends BaseDataProcessor {
 		}
 	}
 
+	public void setDefaultModel(VQVADModel model) {
+		defaultModel = model;
+	}
+
+	public VQVADModel getDefaultModel() {
+		if (defaultModel == null) {
+			defaultModel = loadDefaultModel();
+		}
+
+		return defaultModel;
+	}
+
 	/**
 	 *
 	 * @return
 	 */
-	protected VQVADModel getDefaultModel() {
+	protected VQVADModel loadDefaultModel() {
 		final DoublePoint[] speech_model = new DoublePoint[16];
 		final DoublePoint[] nonspeech_model = new DoublePoint[16];
 
