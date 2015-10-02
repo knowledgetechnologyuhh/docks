@@ -40,6 +40,15 @@ import edu.cmu.sphinx.frontend.endpoint.SpeechMarker;
 import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 
+/**
+ * VQ Voice Activity Detector.
+ *
+ * Uses the VQVAD pipeline to classify speech.
+ * As long as the microphone audio source is open the VAD will be active and learning
+ * according to the learning rate that is set. The learning rate can be set using
+ * the learning_rate property of the VQVADClassifier.
+ *
+ */
 public class VQVoiceActivityDetector extends AudioInputStream {
 	private final String TAG="VQVoiceActivityDetector";
 	private final FrontEnd frontend;

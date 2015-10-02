@@ -24,6 +24,9 @@ import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DataProcessingException;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Double;
 
 /**
  * Classification element in the VQVAD classifier pipeline.
@@ -41,7 +44,9 @@ public class VQVADClassifier extends BaseDataProcessor {
 
 	protected VQVADModel currentModel;
 
-	protected double lambda = 0.8;
+    @S4Double(defaultValue = 0.05)
+    public final static String LEARNING_RATE = "learning_rate";
+	protected double learning_rate;
 
 	public VQVADClassifier() {}
 
@@ -56,8 +61,14 @@ public class VQVADClassifier extends BaseDataProcessor {
 	 * @param lambda
 	 */
 	public VQVADClassifier(double lambda) {
-		this.lambda = lambda;
+		this.learning_rate = lambda;
 	}
+
+    @Override
+    public void newProperties(PropertySheet ps) throws PropertyException {
+        super.newProperties(ps);
+        learning_rate = ps.getDouble(LEARNING_RATE);
+    }
 
 	/**
 	 * Defaults to a speech classification to avoid data loss if no model
@@ -84,7 +95,7 @@ public class VQVADClassifier extends BaseDataProcessor {
         	if (currentModel == null) {
         		currentModel = (VQVADModel) data;
         	} else {
-        		currentModel = currentModel.merge((VQVADModel) data, lambda);
+        		currentModel = currentModel.merge((VQVADModel) data, learning_rate);
         	}
         }
 
