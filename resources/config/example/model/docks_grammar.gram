@@ -1,0 +1,11 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for WTM
+ */
+
+grammar scenario;
+
+public <utterance> = bring me a <size> pizza with <ingredient>;
+<size> = small | medium | big;
+<ingredient> = salami | ham;

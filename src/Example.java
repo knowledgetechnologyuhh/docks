@@ -20,6 +20,17 @@
  * 7twiefel@informatik.uni-hamburg.de
  */
 
+import info.knowledgeTechnology.docks.Data.Result;
+import info.knowledgeTechnology.docks.Frontend.LocalMicrophone;
+import info.knowledgeTechnology.docks.Frontend.VoiceActivityDetector;
+import info.knowledgeTechnology.docks.PostProcessor.SentencelistPostProcessor;
+import info.knowledgeTechnology.docks.PostProcessor.SphinxBasedPostProcessor;
+import info.knowledgeTechnology.docks.PostProcessor.WordlistPostProcessor;
+import info.knowledgeTechnology.docks.Recognizer.RawGoogleRecognizer;
+import info.knowledgeTechnology.docks.Recognizer.SphinxRecognizer;
+import info.knowledgeTechnology.docks.Utils.ExampleChooser;
+import info.knowledgeTechnology.docks.Utils.Printer;
+
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
@@ -31,21 +42,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
-import Data.Result;
-
-import Frontend.LocalMicrophone;
-import Frontend.VoiceActivityDetector;
-
-import PostProcessor.SentencelistPostProcessor;
-import PostProcessor.SphinxBasedPostProcessor;
-import PostProcessor.WordlistPostProcessor;
-
-import Recognizer.RawGoogleRecognizer;
-import Recognizer.SphinxRecognizer;
-
-import Utils.ExampleChooser;
-import Utils.Printer;
 
 
 /**
@@ -239,8 +235,7 @@ class Example {
 				0, 0, 0);
 
 		System.out.println("Starting Google+Wordlist");
-		WordlistPostProcessor wordlist = new WordlistPostProcessor(configname
-				+ ".words",key);
+		WordlistPostProcessor wordlist = null;
 
 		// a testfile
 		String filename = "data/back_fs_1387386033021_m1.wav";
