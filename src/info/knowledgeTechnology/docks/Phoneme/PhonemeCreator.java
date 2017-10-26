@@ -230,7 +230,7 @@ public class PhonemeCreator {
 			pdb = (PhonemeDB) o.readObject();
 
 		} catch (IOException e) {
-			System.err.println(e);
+			System.out.println("did not find "+sentenceFile + ".ser"+" will try to create it");
 			
 			//if no cached phonemes are available cache ones
 			fillDatabase(sentenceFile);

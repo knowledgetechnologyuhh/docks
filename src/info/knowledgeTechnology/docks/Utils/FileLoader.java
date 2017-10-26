@@ -222,7 +222,7 @@ public class FileLoader {
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println("not found at: " + searchPath);
+			System.out.println("not found at: " + searchPath);
 			System.out
 					.println("trying to load from linked docks source code at:");
 			searchPath = projectLocatorPath + "resources/" + resourcePath;
@@ -293,7 +293,7 @@ public class FileLoader {
 			System.out.println("looks like you are working inside docks");
 			res = cl.getResource(searchPath);
 		} else {
-			System.err.println("not found at: " + searchPath);
+			System.out.println("not found at: " + searchPath);
 			System.out
 					.println("trying to load from linked docks source code at:");
 			searchPath = projectLocatorPath + "resources/" + resourcePath;
