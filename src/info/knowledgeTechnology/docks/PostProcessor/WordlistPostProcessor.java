@@ -41,7 +41,7 @@ public class WordlistPostProcessor  implements StandardRecognizer{
 	 * @param referenceRecognizer recognizer the result is postprocessed from
 	 * @param name of this recognizer
 	 */
-	private WordlistPostProcessor(String wordFile,int referenceRecognizer, String name,String key) {
+	public WordlistPostProcessor(String wordFile,int referenceRecognizer, String name,String key) {
 		this(wordFile,key);
 		this.referenceRecognizer= referenceRecognizer;
 	 	this.name=name;
@@ -50,7 +50,7 @@ public class WordlistPostProcessor  implements StandardRecognizer{
 	 * create a new wordlist postprocessor
 	 * @param wordFile path to word list
 	 */
-	private WordlistPostProcessor(String wordFile,String key) {
+	public WordlistPostProcessor(String wordFile,String key) {
 		super();
 		//use a Sentencelist postprocessor internally
 		this.lr = new SentencelistPostProcessor(wordFile,1,key);
